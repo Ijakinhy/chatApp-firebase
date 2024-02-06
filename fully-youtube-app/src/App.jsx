@@ -26,7 +26,6 @@ const Layout = ({ children }) => {
 };
 
 function App() {
-  const redirect = false;
   return (
     <BrowserRouter>
       <Routes>
