@@ -23,18 +23,22 @@ const keywords = [
 
 const CategoriesBar = () => {
   const [activeElement, setActiveElement] = useState("All");
-  // const handleClick= (item)=> setActiveElement(item)
+  const handleClick = (element) => {
+    setActiveElement(element);
+  };
   return (
-    <div className="categoriesBar">
-      {keywords.map((item, index) => (
-        <span
-          onClick={() => setActiveElement(item)}
-          key={index}
-          className={activeElement === item ? "active" : ""}
-        >
-          {item}
-        </span>
-      ))}
+    <div className="categoriesaBar">
+      {keywords.map((keyword, index) => {
+        return (
+          <span
+            onClick={() => handleClick(keyword)}
+            className={activeElement == keyword ? "active" : ""}
+            key={index}
+          >
+            {keyword}
+          </span>
+        );
+      })}
     </div>
   );
 };

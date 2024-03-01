@@ -1,33 +1,42 @@
-@import "../../base";
-
+@import "../../_base.scss";
 .sidebar {
-  background: $black-secondary;
+  background: $black-primary;
   display: flex;
+  flex: 0.2;
   flex-direction: column;
   width: 250px;
   height: 90vh;
   padding-top: 2rem;
-  transition: 0.5s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  position: fixed;
+  top: rem;
+  z-index: 999;
 
   li {
-    display: flex;
+    // display: flex;
     align-items: center;
-    padding: 0.6rem 1.5px;
+    padding: 0.6rem 1.5rem;
     margin: 0.2rem 0;
+    list-style: none;
     cursor: pointer;
+    border-radius: 5px;
 
     span {
       margin-left: 1rem;
-      font-weight: bold;
-      letter-spacing: 0.5px;
       font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.4px;
     }
     &:hover {
       background: $border-color;
     }
   }
   hr {
-    background: $border-color;
+    width: 100%;
+    height: 1px;
+    // border: none;
+    border: 1px solid $border-color;
+    margin: 1rem 0;
   }
   &.open {
     transform: translateX(0);
@@ -40,17 +49,16 @@
 
     li {
       justify-content: center;
-
-      span {
-        display: none;
-      }
+    }
+    span {
+      display: none;
     }
   }
 }
+
 @media (max-width: $breakpoint-small) {
   .sidebar {
     transform: translateX(-100%);
-
     position: fixed;
     z-index: 999;
   }

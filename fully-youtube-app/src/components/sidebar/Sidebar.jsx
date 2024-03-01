@@ -1,4 +1,5 @@
 import React from "react";
+import "./_sidebar.scss";
 import {
   MdSubscriptions,
   MdExitToApp,
@@ -8,28 +9,25 @@ import {
   MdHome,
   MdSentimentDissatisfied,
 } from "react-icons/md";
-import "./_sidebar.scss";
-const Sidebar = ({ sidebarToggle, handleSidebar }) => {
+
+const Sidebar = ({ toggleSidebar, handleToggleSidebar }) => {
   return (
     <nav
-      className={`${sidebarToggle ? " sidebar open" : " sidebar"}`}
-      onClick={() => handleSidebar(false)}
+      onClick={() => handleToggleSidebar(false)}
+      className={`${toggleSidebar ? "sidebar open" : "sidebar"}`}
     >
       <li>
         <MdHome size={23} />
         <span>Home</span>
       </li>
+
       <li>
         <MdSubscriptions size={23} />
-        <span>Subscriptions</span>
+        <span>Subscription</span>
       </li>
       <li>
         <MdThumbUp size={23} />
-        <span>LikedVideos</span>
-      </li>
-      <li>
-        <MdHistory size={23} />
-        <span>History</span>
+        <span>Liked Videos</span>
       </li>
       <li>
         <MdHistory size={23} />
@@ -46,7 +44,7 @@ const Sidebar = ({ sidebarToggle, handleSidebar }) => {
       <hr />
       <li>
         <MdExitToApp size={23} />
-        <span>Log Out</span>
+        <span>log out</span>
       </li>
       <hr />
     </nav>

@@ -6,26 +6,27 @@ const Videos = () => {
     <div className="video">
       <div className="video_top">
         <img
-          src="	https://i.ytimg.com/vi/VAaUy_Moivw/hq720.jpg?sqp=-…AFwAcABBg==&rs=AOn4CLBN0mUIYcHxgp0unzR8Hw42OsVqJA"
-          alt=""
+          src="https://i.ytimg.com/vi/zL20ETnYnjw/hq720.jpg?sqp=-…AFwAcABBg==&rs=AOn4CLB2HAQpc8c9FSJGyhba0vZRj3tzkg"
+          alt="thumbnail"
         />
-        <span>05:40</span>
+        <span>05:30</span>
       </div>
       <div className="video_title">
-        create app in 5 minutes #made by israel havyarimana
+        Savage Music Festival Injuries - Up To $5,000,000 Cases | Double Episode
+        | Personal Injury Court #made by chintu
       </div>
       <div className="video_details">
         <span>
-          <AiFillEye /> 3m Views •
+          <AiFillEye /> 5m Views •
         </span>
-        <span>10 days ago</span>
+        <span>1 year ago</span>
       </div>
       <div className="video_channel">
         <img
-          src="https://yt3.googleusercontent.com/se2CkUqe18RMc8tzSxjZeLTadtyLBpBADwo1gcHk4Gudn8Kx0x4kw5WNzdMgAYuem8IloMIUFA=s176-c-k-c0x00ffffff-no-rj"
-          alt=""
+          src="	https://yt3.ggpht.com/ytc/AIdro_lT_FSEs_ra90GGnZXfS39DdIIIBkLxIp11mwQ4Rw=s68-c-k-c0x00ffffff-no-rj"
+          alt="channel"
         />
-        <p>Rainbaw Hat jer</p>
+        <p>Rainbow hat jr</p>
       </div>
     </div>
   );
