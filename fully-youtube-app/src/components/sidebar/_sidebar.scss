@@ -6,11 +6,11 @@
   flex-direction: column;
   width: 250px;
   height: 90vh;
-  padding-top: 2rem;
+  padding-top: 0.9rem;
   transition: transform 0.3s ease-in-out;
-  // position: fixed;
-  // top: rem;
-  // z-index: 999;
+  position: fixed;
+  top: 10vh;
+  z-index: 999;
 
   li {
     // display: flex;

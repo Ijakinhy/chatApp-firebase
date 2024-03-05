@@ -5,6 +5,10 @@
   font-size: 0.8rem;
   display: flex;
   overflow-x: scroll;
+  position: fixed;
+  top: 10vh;
+  background: $black-primary;
+  z-index: 500;
 
   ::-webkit-scrollbar {
     width: 0px;

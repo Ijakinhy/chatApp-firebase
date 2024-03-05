@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       <Header handleToggleSidebar={handleToggleSidebar} />
-      <div className="app_container ">
+      <div className="app_container">
         <Sidebar
           toggleSidebar={toggleSidebar}
           handleToggleSidebar={handleToggleSidebar}

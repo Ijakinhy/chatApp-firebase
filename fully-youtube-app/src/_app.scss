@@ -1,8 +1,17 @@
+@import "./base.scss";
+
 .app_container {
   display: flex;
   height: 90vh;
+}
+.app_main {
+  margin-left: 14rem;
+  flex-wrap: wrap;
+  margin-top: 18vh;
+}
 
+@media (max-width: $breakpoint-medium) {
   .app_main {
-    flex-basis: 100%;
+    margin-left: 0px;
   }
 }
