@@ -4,8 +4,10 @@ import Header from "./components/header/Header";
 import Sidebar from "./components/sidebar/Sidebar";
 import HomeScreen from "./screens/homescreen/HomeScreen";
 import { useState } from "react";
+import LoginScreen from "./screens/loginsceen/LoginScreen";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-function App() {
+const Layout = ({ children }) => {
   const [toggleSidebar, setSidebarToggle] = useState(false);
   const handleToggleSidebar = () => {
     setSidebarToggle(!toggleSidebar);
@@ -20,10 +22,46 @@ function App() {
         />
 
         <Container fluid className="app_main">
-          <HomeScreen />
+          {children}
         </Container>
       </div>
     </>
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          exact
+          element={
+            <Layout>
+              <HomeScreen />
+            </Layout>
+          }
+        />
+        <Route path="/auth" element={<LoginScreen />} />
+        <Route
+          path="/search"
+          element={
+            <Layout>
+              <h1>search results</h1>
+            </Layout>
+          }
+        />
+        <Route
+          path="*"
+          exact
+          element={
+            <Layout>
+              <HomeScreen />
+            </Layout>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
