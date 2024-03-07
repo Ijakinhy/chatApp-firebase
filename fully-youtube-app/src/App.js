@@ -3,9 +3,10 @@ import "./_app.scss";
 import Header from "./components/header/Header";
 import Sidebar from "./components/sidebar/Sidebar";
 import HomeScreen from "./screens/homescreen/HomeScreen";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoginScreen from "./screens/loginsceen/LoginScreen";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useNavigate, Route, Routes, Router } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Layout = ({ children }) => {
   const [toggleSidebar, setSidebarToggle] = useState(false);
@@ -30,8 +31,15 @@ const Layout = ({ children }) => {
 };
 
 function App() {
+  const navigate = useNavigate();
+  const { accessToken, loading } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (!loading && !accessToken) {
+      navigate("/auth");
+    }
+  }, [accessToken, loading, navigate]);
   return (
-    <Router>
+    <>
       <Routes>
         <Route
           path="/"
@@ -61,7 +69,7 @@ function App() {
           }
         />
       </Routes>
-    </Router>
+    </>
   );
 }
 

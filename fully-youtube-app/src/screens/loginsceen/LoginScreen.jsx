@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./_loginscreen.scss";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { login } from "../../redux/actions/auth.action";
+import { useNavigate } from "react-router-dom";
 
 const LoginScreen = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const accessToken = useSelector((state) => state.auth.accessToken);
+
+  useEffect(() => {
+    if (accessToken) {
+      navigate("/");
+    }
+  }, [accessToken, navigate]);
+
   const handleLogin = () => {
     dispatch(login());
   };
