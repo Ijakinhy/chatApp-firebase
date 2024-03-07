@@ -23,6 +23,8 @@ export const login = () => async (dispatch) => {
         photoUrl: result.user.photoURL,
       };
 
+      provider.addScope("https://www.googleapis.com/auth/youtube.force-ssl");
+
       sessionStorage.setItem("yout-access-token", accessToken);
       sessionStorage.setItem("yout-user", JSON.stringify(profile));
       dispatch({
