@@ -5,7 +5,7 @@ import Sidebar from "./components/sidebar/Sidebar";
 import HomeScreen from "./screens/homescreen/HomeScreen";
 import { useEffect, useState } from "react";
 import LoginScreen from "./screens/loginsceen/LoginScreen";
-import { useNavigate, Route, Routes, Router } from "react-router-dom";
+import { useNavigate, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Layout = ({ children }) => {
