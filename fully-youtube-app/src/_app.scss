@@ -2,16 +2,16 @@
 
 .app_container {
   display: flex;
-  height: 90vh;
+  // height: 90vh;
 }
 .app_main {
-  margin-left: 14rem;
-  flex-wrap: wrap;
   margin-top: 18vh;
+  // margin-left: 14rem;
+  flex-wrap: wrap;
 }
 
-@media (max-width: $breakpoint-medium) {
-  .app_main {
-    margin-left: 0px;
-  }
-}
+// @media (max-width: $breakpoint-medium) {
+//   .app_main {
+//     margin-left: 0px;
+//   }
+// }

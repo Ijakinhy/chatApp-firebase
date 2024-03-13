@@ -2,28 +2,53 @@ import React, { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import CategoriesBar from "../../components/categoriesBar/CategoriesBar";
 import Videos from "../../components/videos/Videos";
-import { getPopularVideos } from "../../redux/actions/video.action";
-import "./_homescreen.scss";
+import {
+  getPopularVideos,
+  getVideosByCategory,
+} from "../../redux/actions/video.action";
 import { useDispatch, useSelector } from "react-redux";
+import InfiniteScroll from "react-infinite-scroll-component";
 const HomeScreen = () => {
   const dispatch = useDispatch();
-  const { videos } = useSelector((state) => state.homeVideos);
+  const { videos, activeCategory, loading } = useSelector(
+    (state) => state.homeVideos
+  );
 
   useEffect(() => {
     dispatch(getPopularVideos());
   }, [dispatch]);
+  const fetchData = () => {
+    if (activeCategory === "All") {
+      dispatch(getPopularVideos());
+    } else {
+      dispatch(getVideosByCategory(activeCategory));
+    }
+  };
   return (
     <Container className="video_container">
       <CategoriesBar />
-      <Row className="row_video">
-        {videos.map((video, id) => {
-          return (
-            <Col key={id} lg={3} md={4}>
-              <Videos video={video} />
-            </Col>
-          );
-        })}
-      </Row>
+      <InfiniteScroll
+        dataLength={videos.length}
+        next={fetchData}
+        hasMore={true}
+        loader={
+          <div className="spinner-border text-danger d-block mx-auto"></div>
+        }
+      >
+        <Row className="row_video">
+          {loading ? (
+            <h1>Loading...</h1>
+          ) : (
+            videos.map((video, id) => {
+              return (
+                <Col key={id} lg={3} md={4}>
+                  <Videos video={video} />
+                </Col>
+              );
+            })
+          )}
+        </Row>
+      </InfiniteScroll>
     </Container>
   );
 };

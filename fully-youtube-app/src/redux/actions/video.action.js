@@ -5,7 +5,7 @@ import {
   HOME_VIDEO_SUCCESS,
 } from "../actionType";
 
-export const getPopularVideos = () => async (dispatch) => {
+export const getPopularVideos = () => async (dispatch, getState) => {
   try {
     dispatch({
       type: HOME_VIDEO_REQUEST,
@@ -15,7 +15,7 @@ export const getPopularVideos = () => async (dispatch) => {
         part: "snippet,contentDetails,statistics",
         chart: "mostPopular",
         maxResults: 50,
-        pageToken: "",
+        pageToken: getState().homeVideos.nextPageToken,
         regionCode: "US",
       },
     });
@@ -37,7 +37,7 @@ export const getPopularVideos = () => async (dispatch) => {
   }
 };
 
-export const getVideosByCategory = (keyword) => async (dispatch, getStage) => {
+export const getVideosByCategory = (keyword) => async (dispatch, getState) => {
   try {
     dispatch({
       type: HOME_VIDEO_REQUEST,
@@ -46,7 +46,7 @@ export const getVideosByCategory = (keyword) => async (dispatch, getStage) => {
       params: {
         part: "snippet",
         maxResults: 50,
-        pageToken: getStage().homeVideos.nextPageToken,
+        pageToken: getState().homeVideos.nextPageToken,
         q: keyword,
         type: "video",
       },
