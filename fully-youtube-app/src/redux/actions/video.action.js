@@ -24,6 +24,39 @@ export const getPopularVideos = () => async (dispatch) => {
       payload: {
         videos: res.data.items,
         nextPageToken: res.data.nextPageToken,
+        category: "All",
+      },
+    });
+
+    // console.log(res);
+  } catch (error) {
+    dispatch({
+      type: HOME_VIDEO_FAIL,
+      payload: error.message,
+    });
+  }
+};
+
+export const getVideosByCategory = (keyword) => async (dispatch, getStage) => {
+  try {
+    dispatch({
+      type: HOME_VIDEO_REQUEST,
+    });
+    const res = await request("/search", {
+      params: {
+        part: "snippet",
+        maxResults: 50,
+        pageToken: getStage().homeVideos.nextPageToken,
+        q: keyword,
+        type: "video",
+      },
+    });
+    dispatch({
+      type: HOME_VIDEO_SUCCESS,
+      payload: {
+        videos: res.data.items,
+        nextPageToken: res.data.nextPageToken,
+        category: keyword,
       },
     });
 
