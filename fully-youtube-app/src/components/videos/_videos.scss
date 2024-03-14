@@ -12,6 +12,9 @@
     margin-bottom: 0.5rem;
     position: relative;
 
+    .lazy-load-image-background {
+      width: 100%;
+    }
     img {
       width: 100%;
       border-radius: 17px;
@@ -20,7 +23,7 @@
     img:hover {
       border-radius: 0px;
     }
-    span {
+    &_duration {
       position: absolute;
       bottom: 0.3rem;
       right: 0.3rem;
