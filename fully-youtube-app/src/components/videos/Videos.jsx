@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./_videos.scss";
 import { AiFillEye } from "react-icons/ai";
-import { request } from "../../api";
 
+import { request } from "../../api";
 import moment from "moment";
 import numeral from "numeral";
 import LazyLoad from "react-lazy-load";

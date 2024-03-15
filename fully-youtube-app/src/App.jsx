@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import LoginScreen from "./screens/loginsceen/LoginScreen";
 import { useNavigate, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
+import WatchScreen from "./screens/watchScreen/WatchScreen";
 
 const Layout = ({ children }) => {
   const [toggleSidebar, setSidebarToggle] = useState(false);
@@ -56,6 +57,14 @@ function App() {
           element={
             <Layout>
               <h1>search results</h1>
+            </Layout>
+          }
+        />
+        <Route
+          path="/watch/:id"
+          element={
+            <Layout>
+              <WatchScreen />
             </Layout>
           }
         />
