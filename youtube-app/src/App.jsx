@@ -1,35 +1,85 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Container } from "react-bootstrap";
+import "./_app.scss";
+import Header from "./components/header/Header";
+import Sidebar from "./components/sidebar/Sidebar";
+import HomeScreen from "./screens/homescreen/HomeScreen";
+import { useEffect, useState } from "react";
+import LoginScreen from "./screens/loginsceen/LoginScreen";
+import { useNavigate, Route, Routes } from "react-router-dom";
+import { useSelector } from "react-redux";
+import WatchScreen from "./screens/watchScreen/WatchScreen";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const Layout = ({ children }) => {
+  const [toggleSidebar, setSidebarToggle] = useState(false);
+  const handleToggleSidebar = () => {
+    setSidebarToggle(!toggleSidebar);
+  };
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <Header handleToggleSidebar={handleToggleSidebar} />
+      <div className="app_container">
+        <Sidebar
+          toggleSidebar={toggleSidebar}
+          handleToggleSidebar={handleToggleSidebar}
+        />
+
+        <Container fluid className="app_main">
+          {children}
+        </Container>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
+};
+
+function App() {
+  const navigate = useNavigate();
+  const { accessToken, loading } = useSelector((state) => state.auth);
+  useEffect(() => {
+    if (!loading && !accessToken) {
+      navigate("/auth");
+    }
+  }, [accessToken, loading, navigate]);
+  return (
+    <>
+      <Routes>
+        <Route
+          path="/"
+          exact
+          element={
+            <Layout>
+              <HomeScreen />
+            </Layout>
+          }
+        />
+        <Route path="/auth" element={<LoginScreen />} />
+        <Route
+          path="/search"
+          element={
+            <Layout>
+              <h1>search results</h1>
+            </Layout>
+          }
+        />
+        <Route
+          path="/watch/:id"
+          element={
+            <Layout>
+              <WatchScreen />
+            </Layout>
+          }
+        />
+        <Route
+          path="*"
+          exact
+          element={
+            <Layout>
+              <HomeScreen />
+            </Layout>
+          }
+        />
+      </Routes>
+    </>
+  );
 }
 
-export default App
+export default App;
