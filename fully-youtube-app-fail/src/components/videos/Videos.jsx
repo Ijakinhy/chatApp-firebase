@@ -6,6 +6,7 @@ import { request } from "../../api";
 import moment from "moment";
 import numeral from "numeral";
 import LazyLoad from "react-lazy-load";
+import { useNavigate } from "react-router-dom";
 const Videos = ({ video }) => {
   const {
     id,
@@ -59,8 +60,12 @@ const Videos = ({ video }) => {
     };
     getChannelIcon();
   }, [channelId]);
+  const navigate = useNavigate();
+  const handleWatchVideo = () => {
+    navigate(`/watch/${videoId}`);
+  };
   return (
-    <div className="video">
+    <div className="video" onClick={handleWatchVideo}>
       <div className="video_top">
         <LazyLoad effect="blur">
           <img src={url} alt="thumbnail" />

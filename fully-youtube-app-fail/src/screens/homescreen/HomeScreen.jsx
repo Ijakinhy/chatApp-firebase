@@ -60,4 +60,3 @@ const HomeScreen = () => {
 };
 
 export default HomeScreen;
-[...Array(20)].map(() => <Skeleton height={180} width="100%" />);
