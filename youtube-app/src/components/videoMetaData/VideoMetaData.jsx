@@ -18,11 +18,14 @@ const VideoMetaData = ({ videos }) => {
   const { snippet, statistics } = useSelector(
     (state) => state.channelDetails.channels
   );
+  const subscriptionStatus = useSelector(
+    (state) => state.channelDetails.subscriptionStatus
+  );
   const accessToken = useSelector((state) => state.auth.accessToken);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getChannelDetails(channelId));
-    dispatch(checkSubscriptionStatus(channelId));
+    // dispatch(checkSubscriptionStatus(channelId));f
   }, [dispatch, channelId]);
 
   return (
@@ -62,7 +65,13 @@ const VideoMetaData = ({ videos }) => {
           </div>
         </div>
         <div className="d-flex">
-          <button className="btn border-0 p-2 m-3">Subscribe</button>
+          <button
+            className={`btn border-0 p-2 m-3 ${
+              subscriptionStatus && "btn-gray"
+            }`}
+          >
+            {subscriptionStatus ? "Subscribed" : "Subscribe"}
+          </button>
         </div>
       </div>
       <div className="videoMetaData_description">

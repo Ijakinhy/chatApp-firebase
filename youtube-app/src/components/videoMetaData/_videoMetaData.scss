@@ -24,6 +24,10 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
       border-radius: none;
+
+      &.btn-gray {
+        background: gray;
+      }
       &:hover {
         color: #fff;
       }

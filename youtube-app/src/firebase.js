@@ -2,14 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBGj0tKHVf5iHjOfbkUvaLP__bU_X3h_rw",
-  authDomain: "ijakinhy-video-app.firebaseapp.com",
-  projectId: "ijakinhy-video-app",
-  storageBucket: "ijakinhy-video-app.appspot.com",
-  messagingSenderId: "294181020671",
-  appId: "1:294181020671:web:1d98f9014bac5daa407dca",
+  apiKey: "AIzaSyAc8E-74W27Du2BxmuHB6z4wKJMc3dpo6I",
+  authDomain: "ijakinhy-videos-app.firebaseapp.com",
+  projectId: "ijakinhy-videos-app",
+  storageBucket: "ijakinhy-videos-app.appspot.com",
+  messagingSenderId: "400840664434",
+  appId: "1:400840664434:web:9ab8beb255e702cd99a9eb",
 };
-
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);

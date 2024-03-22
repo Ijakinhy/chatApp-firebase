@@ -35,7 +35,7 @@ const WatchScreen = () => {
           ) : (
             <h5>Loadin...</h5>
           )}
-          <Comments />
+          <Comments videoId={id} />
         </div>
       </Col>
       {/* right side */}

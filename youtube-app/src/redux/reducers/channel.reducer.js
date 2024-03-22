@@ -2,10 +2,11 @@ import {
   CHANNEL_DETAILS_FAIL,
   CHANNEL_DETAILS_REQUEST,
   CHANNEL_DETAILS_SUCCESS,
+  SET_SUBSCRIPTION_STATUS,
 } from "../actionType";
 
 export const channelDetailsReducer = (
-  state = { channels: {}, loading: true },
+  state = { channels: {}, loading: true, subscriptionStatus: false },
   action
 ) => {
   const { type, payload } = action;
@@ -26,6 +27,11 @@ export const channelDetailsReducer = (
         ...state,
         loading: false,
         error: payload,
+      };
+    case SET_SUBSCRIPTION_STATUS:
+      return {
+        ...state,
+        subscriptionStatus: payload,
       };
 
     default:
