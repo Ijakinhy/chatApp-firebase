@@ -28,7 +28,7 @@ const WatchScreen = () => {
             allowFullScreen
             width={"100%"}
             height="100%"
-            frameborder="0"
+            frameBorder="0"
           ></iframe>
           {!loading ? (
             <VideoMetaData videos={videos} videoId={id} />

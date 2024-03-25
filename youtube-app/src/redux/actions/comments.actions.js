@@ -7,7 +7,7 @@ import {
   CREATE_COMMENT_SUCCESS,
 } from "../actionType";
 
-export const getCommentOFVideosById = (id) => async (dispatch) => {
+export const getCommentOFVideosById = (id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: COMMENT_LIST_REQUEST,
@@ -16,6 +16,9 @@ export const getCommentOFVideosById = (id) => async (dispatch) => {
       params: {
         part: "snippet",
         videoId: id,
+      },
+      headers: {
+        Authorization: `Bearer ${getState().auth.accessToken}`,
       },
     });
 
@@ -39,7 +42,7 @@ export const addComment = (id, text) => async (dispatch, getState) => {
         videoId: id,
         topLevelComment: {
           snippet: {
-            text: text,
+            textOriginal: text,
           },
         },
       },
