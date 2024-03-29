@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { awaIt, createBudget } from "../helpers";
+import { awaIt, createBudget, createExpense } from "../helpers";
 
 export const dashboardAction = async ({ request }) => {
   await awaIt();
@@ -22,6 +22,18 @@ export const dashboardAction = async ({ request }) => {
         amount: values.newBudgetAmount,
       });
       return toast.success("Budget Created");
+    } catch (error) {
+      throw new Error("There was a problem with creating budget");
+    }
+  }
+  if (_action === "createExpense") {
+    try {
+      createExpense({
+        name: values.newExpense,
+        amount: values.newExpenseAmount,
+        budgetId: values.newExpenseBudget,
+      });
+      return toast.success(`Budget ${values.newExpense} Created`);
     } catch (error) {
       throw new Error("There was a problem with creating budget");
     }

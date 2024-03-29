@@ -26,3 +26,24 @@ export const createBudget = ({ name, amount }) => {
   const newBudgets = [...existingBudget, newItem];
   localStorage.setItem("budgets", JSON.stringify(newBudgets));
 };
+
+export const createExpense = ({ name, amount, budgetId }) => {
+  const newExpense = {
+    id: crypto.randomUUID(),
+    name: name,
+    amount: Number(amount),
+    createAt: Date.now(),
+    budgetId: budgetId,
+  };
+
+  const existingBudget = fetchData("expenses") ?? [];
+  const newExpenses = [...existingBudget, newExpense];
+  localStorage.setItem("expenses", JSON.stringify(newExpenses));
+};
+
+export const formatCurrency = (amt) => {
+  return amt.toLocaleString(undefined, {
+    style: "currency",
+    currency: "USD",
+  });
+};
