@@ -1,9 +1,10 @@
 import React from "react";
-import { fetchData } from "./helpers";
+import { fetchData } from "../helpers";
 
 const dashboardLoader = () => {
   const userName = fetchData("userName");
-  return { userName };
+  const budgets = fetchData("budgets");
+  return { userName, budgets };
 };
 
 export default dashboardLoader;
