@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Form, useFetcher } from "react-router-dom";
 import { CurrencyDollarIcon } from "@heroicons/react/24/solid";
-import { awaIt } from "../helpers";
+// import { awaIt } from "../helpers";
 
 const AddBudgetForm = () => {
   const fetcher = useFetcher();
@@ -42,9 +42,9 @@ const AddBudgetForm = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn--dark">
+        <button type="submit" className="btn btn--dark" disabled={isSubmitting}>
           {isSubmitting ? (
-            <span>Creating Budget....</span>
+            <span>Submitting....</span>
           ) : (
             <>
               <span>Create Budget</span>

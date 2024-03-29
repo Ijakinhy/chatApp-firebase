@@ -2,16 +2,16 @@ import { toast } from "react-toastify";
 import { awaIt, createBudget } from "../helpers";
 
 export const dashboardAction = async ({ request }) => {
+  await awaIt();
   const data = await request.formData();
   const { _action, ...values } = Object.fromEntries(data);
 
   if (_action === "newUser") {
     try {
       localStorage.setItem("userName", JSON.stringify(values.userName));
-      await awaIt();
       return toast.success(`Welcome, ${values.userName}`);
     } catch (error) {
-      throw new Error("there was a problem  with creating account ");
+      throw new Error("there was a problem  with creating account");
     }
   }
 

@@ -9,6 +9,7 @@ const Error = () => {
 
   return (
     <div className="error">
+      <Nav />
       <h1> Uh oh! we've got a problem</h1>
       <p>{error.message || error.statusText}</p>
       <div className="flex-md">
