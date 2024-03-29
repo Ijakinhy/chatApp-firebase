@@ -17,7 +17,9 @@ const AddExpenseForm = ({ budgets }) => {
     <div className="form-wrapper">
       <h2 className="h3">
         Add New{" "}
-        <span className="accent">{budgets.map((budget) => budget.name)}</span>{" "}
+        <span className="accent">
+          {budgets.length === 1 && budgets.map((budget) => budget.name)}
+        </span>{" "}
         expense
       </h2>
 

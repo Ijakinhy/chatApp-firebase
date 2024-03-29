@@ -1,17 +1,25 @@
 import React from "react";
+import {
+  calculateSpentBudget,
+  formatCurrency,
+  formatPercentage,
+} from "../helpers";
 
 const BudgetItem = ({ budget }) => {
   const { id, amount, color, name } = budget;
+  const spent = calculateSpentBudget(id);
   return (
-    <div className="budget">
+    <div className="budget" style={{ "--accent": color }}>
       <div className="progress-text">
         <h3>{name}</h3>
-        <p>{amount} Budgeted</p>
+        <p>{formatCurrency(amount)} Budgeted</p>
       </div>
-      <progress max={amount} value="100"></progress>
+      <progress max={amount} value={spent}>
+        {formatPercentage(spent / amount)}
+      </progress>
       <div className="progress-text">
-        <small>... spent</small>
-        <small>... remaining</small>
+        <small>{formatCurrency(spent)} spent</small>
+        <small>{formatCurrency(amount - spent)} remaining</small>
       </div>
     </div>
   );
