@@ -2,7 +2,7 @@ import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import React, { useEffect, useRef } from "react";
 import { useFetcher } from "react-router-dom";
 
-const AddExpenseForm = ({ budgets }) => {
+export const AddExpenseForm = ({ budgets }) => {
   const fetcher = useFetcher();
   const formRef = useRef();
   const refFocus = useRef();

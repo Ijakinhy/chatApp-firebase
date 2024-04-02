@@ -1,7 +1,7 @@
 import React from "react";
 import ExpenseItem from "./ExpenseItem";
 
-const Table = ({ expenses }) => {
+export const Table = ({ expenses }) => {
   return (
     <div className="table">
       <table>

@@ -5,7 +5,7 @@ import {
   formatPercentage,
 } from "../helpers";
 
-const BudgetItem = ({ budget }) => {
+export const BudgetItem = ({ budget }) => {
   const { id, amount, color, name } = budget;
   const spent = calculateSpentBudget(id);
   return (
