@@ -4,8 +4,10 @@ import {
   formatCurrency,
   formatPercentage,
 } from "../helpers";
+import { Form, Link } from "react-router-dom";
+import { BanknotesIcon, TrashIcon } from "@heroicons/react/24/solid";
 
-export const BudgetItem = ({ budget }) => {
+export const BudgetItem = ({ budget, showDelete = false }) => {
   const { id, amount, color, name } = budget;
   const spent = calculateSpentBudget(id);
   return (
@@ -21,6 +23,35 @@ export const BudgetItem = ({ budget }) => {
         <small>{formatCurrency(spent)} spent</small>
         <small>{formatCurrency(amount - spent)} remaining</small>
       </div>
+      {showDelete ? (
+        <div className="flex-sm">
+          <Form
+            method="post"
+            action="delete"
+            onSubmit={(e) => {
+              if (
+                !confirm(
+                  "Are you sure you want to delete this budget permanent"
+                )
+              ) {
+                e.preventDefault();
+              }
+            }}
+          >
+            <button type="submit" className="btn">
+              <span>Delete Budget</span>
+              <TrashIcon width={20} />
+            </button>
+          </Form>
+        </div>
+      ) : (
+        <div className="flex-sm">
+          <Link to={`/budget/${id}`} className="btn ">
+            <span>View Details</span>
+            <BanknotesIcon width={20} />
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

@@ -36,7 +36,7 @@ export const dashboardAction = async ({ request }) => {
         budgetId: values.newExpenseBudget,
       });
       await awaIt();
-      return toast.success(`Budget ${values.newExpense} Created`);
+      return toast.success(`expense ${values.newExpense} Created`);
     } catch (error) {
       throw new Error("There was a problem with creating budget");
     }

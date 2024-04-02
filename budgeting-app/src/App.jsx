@@ -12,7 +12,9 @@ import ExpensesPage, {
   ExpensesLoader,
   expenseAction,
 } from "./pages/ExpensesPage";
-import BudgetPage, { budgetLoader } from "./pages/BudgetPage";
+import BudgetPage, { budgetAction, budgetLoader } from "./pages/BudgetPage";
+import { deleteBudget } from "./actions/deleteBudget";
+// import { deleteBudget } from "./actions/deleteBudget";
 
 const router = createBrowserRouter([
   {
@@ -38,7 +40,13 @@ const router = createBrowserRouter([
         path: "budget/:id",
         element: <BudgetPage />,
         loader: budgetLoader,
-        errorElement: <Error />,
+        action: budgetAction,
+        children: [
+          {
+            path: "delete",
+            action: deleteBudget,
+          },
+        ],
       },
       {
         path: "logout",
