@@ -1,12 +1,13 @@
 import React from "react";
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import Intro from "../component/Intro";
 import AddBudgetForm from "../component//AddBudgetForm";
 import AddExpenseForm from "../component/AddExpenseForm ";
 import BudgetItem from "../component/BudgetItem";
+import Table from "../component/Table";
 
 const DashBoard = () => {
-  const { userName, budgets } = useLoaderData();
+  const { userName, budgets, expenses } = useLoaderData();
 
   return (
     <>
@@ -37,6 +38,21 @@ const DashBoard = () => {
                   <AddBudgetForm />
                 </div>
               </>
+            )}
+            {expenses && expenses.length > 0 && (
+              <div className="grid-md">
+                <h2>Recent Expenses</h2>
+                <Table
+                  expenses={expenses
+                    .sort((a, b) => b.createAt - a.createAt)
+                    .slice(0, 8)}
+                />
+                {expenses.length > 8 && (
+                  <Link to="expense" className="btn btn--dark">
+                    View All Expenses
+                  </Link>
+                )}
+              </div>
             )}
           </div>
         </div>

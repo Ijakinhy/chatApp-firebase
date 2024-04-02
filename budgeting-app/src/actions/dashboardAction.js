@@ -1,8 +1,7 @@
 import { toast } from "react-toastify";
-import { awaIt, createBudget, createExpense } from "../helpers";
+import { awaIt, createBudget, createExpense, deleteItem } from "../helpers";
 
 export const dashboardAction = async ({ request }) => {
-  await awaIt();
   const data = await request.formData();
   const { _action, ...values } = Object.fromEntries(data);
 
@@ -21,11 +20,14 @@ export const dashboardAction = async ({ request }) => {
         name: values.newBudget,
         amount: values.newBudgetAmount,
       });
+      await awaIt();
+
       return toast.success("Budget Created");
     } catch (error) {
       throw new Error("There was a problem with creating budget");
     }
   }
+
   if (_action === "createExpense") {
     try {
       createExpense({
@@ -33,9 +35,25 @@ export const dashboardAction = async ({ request }) => {
         amount: values.newExpenseAmount,
         budgetId: values.newExpenseBudget,
       });
+      await awaIt();
       return toast.success(`Budget ${values.newExpense} Created`);
     } catch (error) {
       throw new Error("There was a problem with creating budget");
+    }
+  }
+  // delete  expense
+
+  if (_action === "deleteExpense") {
+    try {
+      deleteItem({
+        key: "expenses",
+        id: values.expenseId,
+      });
+      await awaIt();
+
+      return toast.success("Expense deleted");
+    } catch (error) {
+      throw new Error("There was a problem with deleting expense");
     }
   }
 };
