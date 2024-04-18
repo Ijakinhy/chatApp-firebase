@@ -11,7 +11,7 @@ export const fetchData = (key) => {
 };
 //delete expense
 export const deleteItem = ({ key, id }) => {
-  const existingExpenses = fetchData("expenses") ?? [];
+  const existingExpenses = fetchData(key) ?? [];
   if (id) {
     const newExpenses = existingExpenses.filter((expense) => expense.id !== id);
     return localStorage.setItem(key, JSON.stringify(newExpenses));
