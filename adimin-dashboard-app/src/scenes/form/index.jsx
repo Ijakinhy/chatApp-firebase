@@ -1,7 +1,7 @@
 import { Box, Button, TextField, useMediaQuery } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
-import Header from "../../data/component/Header";
+import Header from "../../component/Header";
 
 const initialValues = {
   firstName: "",

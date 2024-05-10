@@ -12,9 +12,9 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { tokens } from "../../theme";
 import { useState } from "react";
-import Header from "../../data/component/Header";
+import Header from "../../component/Header";
+import { tokens } from "../../theme";
 
 const Calendar = () => {
   const theme = useTheme();

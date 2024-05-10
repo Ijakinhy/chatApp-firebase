@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "../../data/component/Header";
+import Header from "../../component/Header";
 import { Box } from "@mui/material";
 
 const Dashboard = () => {

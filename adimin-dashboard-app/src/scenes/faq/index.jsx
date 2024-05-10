@@ -7,8 +7,8 @@ import {
   useTheme,
 } from "@mui/material";
 import { tokens } from "../../theme";
-import Header from "../../data/component/Header";
 import { ExpandMore } from "@mui/icons-material";
+import Header from "../../component/Header";
 
 const FAQ = () => {
   const theme = useTheme();
