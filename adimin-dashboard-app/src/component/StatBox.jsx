@@ -3,7 +3,7 @@ import React from "react";
 import { tokens } from "../theme";
 import ProgressCircle from "./ProgressCircle";
 
-const StatBox = ({ title, subTitle, icon, progress, increase }) => {
+const StatBox = ({ title, subTitle, icon, progress, increase, size }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
