@@ -14,7 +14,8 @@ body,
   position: relative;
 }
 ::-webkit-scrollbar {
-  display: none;
+  display: block;
+  width: 4px;
 }
 ::-webkit-scrollbar-track {
   background: #0e0e0e;
