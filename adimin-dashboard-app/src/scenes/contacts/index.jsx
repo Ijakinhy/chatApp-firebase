@@ -1,102 +1,85 @@
-import { Box, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
+import Header from "../../components/Header";
 import { tokens } from "../../theme";
-import Header from "../../component/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-
 import { mockDataContacts } from "../../data/mockData";
-
+import {
+  AdminPanelSettingsOutlined,
+  LockOpenOutlined,
+  SecurityOutlined,
+} from "@mui/icons-material";
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
-    { field: "registrarId", headerName: "Registrar ID" },
+    { field: "registrarId", headerName: "Registrar ID", flex: 0.5 },
     {
       field: "name",
-      headerName: "Name",
+      Name: "Name",
       flex: 1,
-      cellClassName: "name-column--cell",
+      cellClassName: "cell--class--name",
+    },
+    {
+      field: "email",
+      Name: "Email Address",
+      flex: 1,
+      cellClassName: "cell--class--name",
     },
     {
       field: "age",
-      headerName: "Age",
+      Name: "Age",
       type: "number",
       headerAlign: "left",
       align: "left",
     },
-    {
-      field: "phone",
-      headerName: "Phone Number",
-      flex: 1,
-    },
-
-    {
-      field: "email",
-      headerName: "Email",
-      flex: 1,
-    },
-    {
-      field: "address",
-      headerName: "Address",
-      flex: 1,
-    },
-    {
-      field: "city",
-      headerName: "City",
-      flex: 1,
-    },
-    {
-      field: "zipCode",
-      headerName: "ZipCode",
-      flex: 1,
-    },
+    { field: "phone", Name: "Phone Number", flex: 0.5 },
+    { field: "address", Name: "address", flex: 1 },
+    { field: "city", Name: "City", flex: 0.5 },
+    { field: "zipCode", Name: "Zip Code " },
   ];
 
   return (
-    <Box m={"20px"}>
+    <Box m="20px">
       <Header
         title="CONTACTS"
-        subTitle={"List of Contacts for Future Reference "}
+        subTitle="List of Contacts for Future Reference"
       />
-
       <Box
-        m={"20px 0 0 0"}
-        width={"100%"}
-        height={"78vh"}
+        height="74vh"
+        display="flex"
+        justifyContent="center"
+        m="40px 0 20px 0"
         sx={{
           "& .MuiDataGrid-root": {
-            border: "none",
+            border: "none !important",
           },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
+          "& .cell--class--name": {
+            color: colors.greenAccent[400],
           },
-          "& .name-column--cell": {
-            color: colors.greenAccent[300],
-          },
-          "& .MuiDataGrid-columnHeader": {
+          "& .MuiDataGrid-columnHeader ": {
             bgcolor: colors.blueAccent[700],
-            borderBottom: "none",
+            borderBottom: "none !important",
           },
           "& .MuiDataGrid-virtualScroller": {
             bgcolor: colors.primary[400],
           },
+          "& .MuiDataGrid-cell": {
+            border: "none !important",
+          },
           "& .MuiDataGrid-footerContainer": {
             bgcolor: colors.blueAccent[700],
-            borderTop: "none",
+            borderTop: "none !important",
           },
-          "& .MuiCheckbox-root": {
-            color: `${colors.grey[100]} !important`,
-          },
-          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${colors.grey[100]} !important`,
+          "& .MuiButtonBase-root": {
+            color: colors.grey[100],
           },
         }}
       >
         <DataGrid
-          rows={mockDataContacts}
           columns={columns}
-          components={{ Toolbar: GridToolbar }}
+          rows={mockDataContacts}
+          slots={{ toolbar: GridToolbar }}
         />
       </Box>
     </Box>

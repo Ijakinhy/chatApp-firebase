@@ -1,6 +1,6 @@
 import { Box, Typography, useTheme } from "@mui/material";
+import Header from "../../components/Header";
 import { tokens } from "../../theme";
-import Header from "../../component/Header";
 import { DataGrid } from "@mui/x-data-grid";
 import { mockDataTeam } from "../../data/mockData";
 import {
@@ -8,60 +8,54 @@ import {
   LockOpenOutlined,
   SecurityOutlined,
 } from "@mui/icons-material";
-
 const Team = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   const columns = [
     { field: "id", headerName: "ID" },
     {
       field: "name",
-      headerName: "Name",
+      Name: "Name",
       flex: 1,
-      cellClassName: "name-column--cell",
+      cellClassName: "cell--class--name",
     },
     {
       field: "age",
-      headerName: "Age",
+      Name: "Age",
       type: "number",
       headerAlign: "left",
       align: "left",
     },
-    {
-      field: "phone",
-      headerName: "Phone Number",
-      flex: 1,
-    },
-
+    { field: "phone", Name: "Phone Number", flex: 1 },
     {
       field: "email",
-      headerName: "Email",
+      Name: "Email Address",
       flex: 1,
+      cellClassName: "cell--class--name",
     },
     {
       field: "access",
-      headerName: "Access Level",
+      Name: "Access Level",
       flex: 1,
       renderCell: ({ row: { access } }) => {
         return (
           <Box
-            width="60%"
-            m={"0 auto"}
-            display={"flex"}
-            justifyContent={"center"}
-            p={"5px"}
             bgcolor={
               access === "admin"
-                ? colors.greenAccent[600]
+                ? colors.greenAccent[500]
                 : colors.greenAccent[700]
             }
-            borderRadius={"4px"}
+            display="flex"
+            justifyContent="center"
+            width="60%"
+            p="5px"
+            m="0 auto"
+            borderRadius="5px"
           >
             {access === "admin" && <AdminPanelSettingsOutlined />}
-            {access === "manager" && <SecurityOutlined />}
             {access === "user" && <LockOpenOutlined />}
-            <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
+            {access === "manager" && <SecurityOutlined />}
+            <Typography color={colors.grey[100]} ml="5px">
               {access}
             </Typography>
           </Box>
@@ -69,38 +63,38 @@ const Team = () => {
       },
     },
   ];
-
   return (
-    <Box m={"20px"}>
-      <Header title="Team" subTitle={"Managing the Team Members"} />
-
+    <Box m="20px">
+      <Header title="TEAM" subTitle="Managing Your Team Members" />
       <Box
-        m={"40px  0 0 0"}
-        height={"75vh"}
+        height="74vh"
+        display="flex"
+        justifyContent="center"
+        m="40px 0 20px 0"
         sx={{
           "& .MuiDataGrid-root": {
-            border: "none",
+            border: "none !important",
           },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
+          "& .cell--class--name": {
+            color: colors.greenAccent[400],
           },
-          "& .name-column--cell": {
-            color: colors.greenAccent[300],
-          },
-          "& .MuiDataGrid-columnHeader": {
+          "& .MuiDataGrid-columnHeader ": {
             bgcolor: colors.blueAccent[700],
-            borderBottom: "none",
+            borderBottom: "none !important",
           },
           "& .MuiDataGrid-virtualScroller": {
             bgcolor: colors.primary[400],
           },
+          "& .MuiDataGrid-cell": {
+            border: "none !important",
+          },
           "& .MuiDataGrid-footerContainer": {
             bgcolor: colors.blueAccent[700],
-            borderTop: "none",
+            borderTop: "none !important",
           },
         }}
       >
-        <DataGrid rows={mockDataTeam} columns={columns} />
+        <DataGrid columns={columns} rows={mockDataTeam} />
       </Box>
     </Box>
   );
