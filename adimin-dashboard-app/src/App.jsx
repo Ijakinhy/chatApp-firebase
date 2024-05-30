@@ -23,7 +23,7 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="app">
+        <d iv className="app">
           <Sidebar />
           <main className="content">
             <TopBar />
@@ -41,7 +41,7 @@ function App() {
               <Route path="/geography" element={<Geography />} />
             </Routes>
           </main>
-        </div>
+        </d>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );
