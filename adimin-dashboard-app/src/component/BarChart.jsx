@@ -1,13 +1,12 @@
-import React from "react";
 import { useTheme } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
-import { mockBarData as data } from "../data/mockData";
 import { tokens } from "../theme";
+import { mockBarData as data } from "../data/mockData";
+import React from "react";
 
 const BarChart = ({ isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   return (
     <ResponsiveBar
       data={data}
@@ -18,7 +17,6 @@ const BarChart = ({ isDashboard = false }) => {
               stroke: colors.grey[100],
             },
           },
-
           legend: {
             text: {
               fill: colors.grey[100],
@@ -37,6 +35,11 @@ const BarChart = ({ isDashboard = false }) => {
         legends: {
           text: {
             fill: colors.grey[100],
+          },
+        },
+        tooltip: {
+          container: {
+            color: colors.blueAccent[700],
           },
         },
       }}
@@ -110,7 +113,7 @@ const BarChart = ({ isDashboard = false }) => {
       labelSkipHeight={12}
       labelTextColor={{
         from: "color",
-        modifiers: [["darker", "1.6"]],
+        modifiers: [["darker", 1.6]],
       }}
       legends={[
         {

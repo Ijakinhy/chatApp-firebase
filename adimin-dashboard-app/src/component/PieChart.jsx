@@ -1,13 +1,11 @@
-import { useTheme } from "@mui/material";
-import { ResponsivePie } from "@nivo/pie";
 import React from "react";
+import { Box, useTheme, useThemeProps } from "@mui/material";
+import { ResponsivePie } from "@nivo/pie";
 import { tokens } from "../theme";
 import { mockPieData as data } from "../data/mockData";
-
-const PieChart = () => {
+const PieChart = ({ isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   return (
     <ResponsivePie
       data={data}
@@ -38,6 +36,11 @@ const PieChart = () => {
             fill: colors.grey[100],
           },
         },
+        tooltip: {
+          container: {
+            color: colors.blueAccent[700],
+          },
+        },
       }}
       margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
       innerRadius={0.5}
@@ -50,7 +53,7 @@ const PieChart = () => {
         modifiers: [["darker", 0.2]],
       }}
       arcLinkLabelsSkipAngle={10}
-      arcLinkLabelsTextColor={`${colors.grey[100]}`}
+      arcLinkLabelsTextColor={colors.grey[100]}
       arcLinkLabelsThickness={2}
       arcLinkLabelsColor={{ from: "color" }}
       enableArcLabels={false}

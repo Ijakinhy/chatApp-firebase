@@ -1,13 +1,12 @@
-import { useTheme } from "@mui/material";
 import React from "react";
+import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
-import { mockLineData as data } from "../data/mockData";
 import { ResponsiveLine } from "@nivo/line";
+import { mockLineData as data } from "../data/mockData";
 
 const LineChart = ({ isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
   return (
     <ResponsiveLine
       data={data}
@@ -40,7 +39,9 @@ const LineChart = ({ isDashboard = false }) => {
         },
         tooltip: {
           container: {
-            color: colors.primary[500],
+            stroke: colors.grey[400],
+            strokeWidth: 1,
+            color: colors.primary[400],
           },
         },
       }}
@@ -72,7 +73,7 @@ const LineChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "count",
+        legend: isDashboard ? undefined : "transportation",
         legendOffset: -40,
         legendPosition: "middle",
         truncateTickAt: 0,
@@ -85,7 +86,6 @@ const LineChart = ({ isDashboard = false }) => {
       pointBorderColor={{ from: "serieColor" }}
       pointLabel="data.yFormatted"
       pointLabelYOffset={-12}
-      areaOpacity={0.25}
       enableTouchCrosshair={true}
       useMesh={true}
       legends={[
