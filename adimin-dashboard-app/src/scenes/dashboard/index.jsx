@@ -174,7 +174,7 @@ const Dashboard = () => {
           <Box
             display="flex"
             justifyContent="space-between"
-            alignItems="cent  er"
+            alignItems="center"
             borderBottom={`4px solid ${colors.primary[500]}`}
             p="15px"
             color={colors.grey[100]}
