@@ -95,6 +95,10 @@
       &:hover {
         background-color: rgba(230, 74, 105, 0.9);
       }
+      &.logout {
+        padding: 10px;
+        background-color: #1a73e8;
+      }
     }
   }
 }
