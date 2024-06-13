@@ -34,3 +34,10 @@ body {
   background: rgba(17, 25, 40, 0.75);
   border-radius: 10px;
 }
+
+.loading {
+  font-size: 36px;
+  padding: 50px;
+  background-color: rgba(17, 25, 40, 0.9);
+  border-radius: 10px;
+}
