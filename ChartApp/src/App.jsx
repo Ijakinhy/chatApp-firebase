@@ -10,17 +10,18 @@ import { useUserStore } from "./lib/userStore";
 
 function App() {
   const { currentUser, isLoading, fetchUserInfo } = useUserStore();
-
+  const user = true;
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
-      fetchUserInfo(user.uid);
+      console.log(user);
+      fetchUserInfo(user?.uid);
     });
 
     return () => {
       unSub();
     };
-  }, [fetchUserInfo]);
-  console.log(currentUser);
+  }, []);
+  // console.log(currentUser);
   if (isLoading) return <div className="loading">Loading...</div>;
   return (
     <div className="container">

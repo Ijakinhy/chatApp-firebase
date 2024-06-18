@@ -64,6 +64,8 @@ const Login = () => {
       toast.success("Login Success");
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
   return (
