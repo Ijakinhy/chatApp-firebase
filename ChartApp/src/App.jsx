@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import Chat from "./components/chats/Chats";
 import Details from "./components/details/Details";
 import List from "./components/list/List";
@@ -10,6 +10,7 @@ import { useUserStore } from "./lib/userStore";
 
 function App() {
   const { currentUser, isLoading, fetchUserInfo } = useUserStore();
+
   const user = true;
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
