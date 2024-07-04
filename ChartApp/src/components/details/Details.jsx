@@ -1,7 +1,15 @@
 import React from "react";
 import "./details.css";
+import { auth } from "../../lib/firebase";
+import { useDispatch } from "react-redux";
+import { blockUser } from "../../slices/chatSlice";
 
 const Details = () => {
+  const dispatch = useDispatch();
+  const handleBlockUser = () => {
+    dispatch(blockUser());
+    console.log("user blocked");
+  };
   return (
     <div className="details">
       <div className="user">
@@ -77,8 +85,10 @@ const Details = () => {
             <img src="/public/arrowDown.png" alt="" />
           </div>
         </div>
-        <button>Block User</button>
-        <button className="logout">Logout</button>
+        <button onClick={handleBlockUser}>Block User</button>
+        <button className="logout" onClick={() => auth.signOut()}>
+          Logout
+        </button>
       </div>
     </div>
   );

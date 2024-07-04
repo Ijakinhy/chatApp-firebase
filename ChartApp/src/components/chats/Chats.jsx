@@ -1,11 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./chats.css";
 import EmojiPicker from "emoji-picker-react";
+import {
+  arrayUnion,
+  doc,
+  getDoc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "../../lib/firebase";
+import { useSelector } from "react-redux";
 
 const Chats = () => {
   const [openEmoji, setOpenEmoji] = useState(false);
+  const [chat, setChat] = useState(null);
+
   const [text, setText] = useState("");
   const endRef = useRef();
+  const { chatId, user } = useSelector((state) => state.chat);
+  const { currentUser } = useSelector((state) => state.user);
   const handleEmojiClick = (event) => {
     setText((prev) => prev + event.emoji);
     setTimeout(() => {
@@ -13,6 +26,50 @@ const Chats = () => {
     }, 1000);
   };
   useEffect(() => endRef.current.scrollIntoView({ behavior: "smooth" }), []);
+  useEffect(() => {
+    const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
+      setChat(res.data());
+    });
+    return () => {
+      unSub();
+    };
+  }, [chatId]);
+  // console.log(chat);
+  const handleSendMessage = async () => {
+    try {
+      await updateDoc(doc(db, "chats", chatId), {
+        messages: arrayUnion({
+          createdAt: new Date(),
+          text: text,
+          senderId: currentUser.id,
+        }),
+      });
+      const userIDs = [user.id, currentUser.id];
+      userIDs.forEach(async (id) => {
+        const userChatsRef = doc(db, "userChats", id);
+        const userChatsSnapShot = await getDoc(userChatsRef);
+
+        if (userChatsSnapShot.exists()) {
+          const userChatsData = userChatsSnapShot.data();
+
+          const chatIndex = userChatsData.chats.findIndex(
+            (item) => item.chatId === chatId
+          );
+          userChatsData.chats[chatIndex].lastMessage = text;
+          userChatsData.chats[chatIndex].isSeen =
+            id === currentUser.id ? true : false;
+          userChatsData.chats[chatIndex].updatedAt = Date.now();
+
+          await updateDoc(userChatsRef, {
+            chats: userChatsData.chats,
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="chats">
       <div className="top">
@@ -30,104 +87,15 @@ const Chats = () => {
         </div>
       </div>
       <div className="center">
-        <div className="message">
-          <img src="/public/avatar.png" alt="" />
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequatur distinctio, soluta alias unde officia quod molestiae
-              nihil, facilis ea debitis atque deserunt est inventore voluptas
-              minus! Officiis earum deleniti illum.{" "}
-            </p>
-            <span>1 min ago</span>
+        {chat?.messages?.map((message) => (
+          <div className="message own" key={message?.createdAt}>
+            <div className="texts">
+              {message.img && <img src={message.img} alt="" />}
+              <p>{message?.text}</p>
+              <span>1 min ago</span>
+            </div>
           </div>
-        </div>
-
-        <div className="message own">
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequatur distinctio, soluta alias unde officia quod molestiae
-              nihil, facilis ea debitis atque deserunt est inventore voluptas
-              minus! Officiis earum deleniti illum.
-            </p>
-            <span>1 min ago</span>
-          </div>
-        </div>
-        <div className="message">
-          <img src="/public/avatar.png" alt="" />
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequatur distinctio, soluta alias unde officia quod molestiae
-              nihil, facilis ea debitis atque deserunt est inventore voluptas
-              minus! Officiis earum deleniti illum.{" "}
-            </p>
-            <span>1 min ago</span>
-          </div>
-        </div>
-        <div className="message own">
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequatur distinctio, soluta alias unde officia quod molestiae
-              nihil, facilis ea debitis atque deserunt est inventore voluptas
-              minus! Officiis earum deleniti illum.{" "}
-            </p>
-            <span>1 min ago</span>
-          </div>
-        </div>
-        <div className="message">
-          <img src="/public/avatar.png" alt="" />
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequatur distinctio, soluta alias unde officia quod molestiae
-              nihil, facilis ea debitis atque deserunt est inventore voluptas
-              minus! Officiis earum deleniti illum.
-            </p>
-            <span>1 min ago</span>
-          </div>
-        </div>
-        <div className="message own">
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequatur distinctio, soluta alias unde officia quod molestiae
-              nihil, facilis ea debitis atque deserunt est inventore voluptas
-              minus! Officiis earum deleniti illum.
-            </p>
-            <span>1 min ago</span>
-          </div>
-        </div>
-        <div className="message">
-          <img src="/public/avatar.png" alt="" />
-          <div className="texts">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequatur distinctio, soluta alias unde officia quod molestiae
-              nihil, facilis ea debitis atque deserunt est inventore voluptas
-              minus! Officiis earum deleniti illum.
-            </p>
-            <span>1 min ago</span>
-          </div>
-        </div>
-
-        <div className="message own">
-          <div className="texts">
-            <img
-              src="https://i.pinimg.com/564x/76/1e/b8/761eb81535806ec7186fdf2abd6453ad.jpg"
-              alt=""
-            />
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequatur distinctio, soluta alias unde officia quod molestiae
-              nihil, facilis ea debitis atque deserunt est inventore voluptas
-              minus! Officiis earum deleniti illum.
-            </p>
-            <span>1 min ago</span>
-          </div>
-        </div>
+        ))}
         <div ref={endRef}></div>
       </div>
       <div className="bottom">
@@ -152,7 +120,9 @@ const Chats = () => {
             <EmojiPicker onEmojiClick={handleEmojiClick} open={openEmoji} />
           </div>
         </div>
-        <button className="sendButton">Send</button>
+        <button className="sendButton" onClick={handleSendMessage}>
+          Send
+        </button>
       </div>
     </div>
   );
