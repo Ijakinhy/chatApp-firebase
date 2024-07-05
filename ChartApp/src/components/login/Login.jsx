@@ -65,6 +65,9 @@ const Login = () => {
       window.location.reload();
     } catch (error) {
       toast.error(error.message);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
   return (

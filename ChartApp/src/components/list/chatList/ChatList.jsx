@@ -9,6 +9,7 @@ import { changeChat } from "../../../slices/chatSlice";
 const ChatList = () => {
   const [addMode, setAddMode] = useState(false);
   const [chats, setChats] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
 
   const { chatId } = useSelector((state) => state.chat);
   const { currentUser } = useSelector((state) => state.user);
@@ -44,8 +45,6 @@ const ChatList = () => {
   }, [currentUser.id]);
   // console.log(chats);
 
-  const user = chats.map((chat) => chat.user);
-
   const handleSelectChat = async (chat) => {
     const userChats = chats.map((item) => {
       const { user, ...rest } = item;
@@ -56,9 +55,9 @@ const ChatList = () => {
     );
     userChats[chatIndex].isSeen = true;
     try {
-      await updateDoc(doc(db, "userChats", currentUser.id), {
-        chats: userChats,
-      });
+      // await updateDoc(doc(db, "userChats", currentUser.id), {
+      //   chats: userChats,
+      // });
       dispatch(
         changeChat({ chatId: chat.chatId, user: chat.user, currentUser })
       );
@@ -66,13 +65,21 @@ const ChatList = () => {
       console.log(error.message);
     }
   };
-
+  const filteredChats = chats.filter((chat) =>
+    chat.user.username.toLowerCase().includes(searchInput.toLowerCase())
+  );
+  console.log(filteredChats);
   return (
     <div className="chatList">
       <div className="search">
         <div className="searchBar">
           <img src="/public/search.png" alt="search" />
-          <input type="text" placeholder="Search" />
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
         </div>
         <img
           src={addMode ? "/public/minus.png" : "/public/plus.png"}
@@ -82,17 +89,31 @@ const ChatList = () => {
         />
       </div>
 
-      {chats.map((chat) => {
+      {filteredChats.map((chat) => {
+        console.log(chat);
         return (
           <div
             className="item"
             key={chat?.chatId}
             onClick={() => handleSelectChat(chat)}
-            style={{ backgroundColor: chat.isSeen ? "transparent" : "#5183fe" }}
+            style={{
+              backgroundColor: chat.isSeen ? "transparent" : "#5183fe",
+            }}
           >
-            <img src={chat.user.avatar} alt="" />
+            <img
+              src={
+                chat.user.blocked.includes(currentUser.id)
+                  ? "/public/avatar.png"
+                  : chat.user.avatar
+              }
+              alt=""
+            />
             <div className="texts">
-              <span>{chat.user.username}</span>
+              <span>
+                {chat.user.blocked.includes(currentUser.id)
+                  ? "user"
+                  : chat.user.username}
+              </span>
               <p>{chat.lastMessage}</p>
             </div>
           </div>

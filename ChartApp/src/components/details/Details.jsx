@@ -1,20 +1,36 @@
 import React from "react";
 import "./details.css";
-import { auth } from "../../lib/firebase";
-import { useDispatch } from "react-redux";
+import { auth, db } from "../../lib/firebase";
+import { useDispatch, useSelector } from "react-redux";
 import { blockUser } from "../../slices/chatSlice";
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 
 const Details = () => {
+  const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const handleBlockUser = () => {
-    dispatch(blockUser());
+  const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } = useSelector(
+    (state) => state.chat
+  );
+  const handleBlockUser = async () => {
+    if (!user) return;
+    const userDocRef = doc(db, "users", currentUser.id);
+    try {
+      updateDoc(userDocRef, {
+        blocked: isReceiverBlocked ? arrayRemove(user.id) : arrayUnion(user.id),
+      });
+
+      dispatch(blockUser());
+    } catch (error) {
+      console.log(error.message);
+    }
     console.log("user blocked");
   };
+
   return (
     <div className="details">
       <div className="user">
-        <img src="/public/avatar.png" alt="" />
-        <h2>israel</h2>
+        <img src={user?.avatar || "/public/avatar.png"} alt="" />
+        <h2>{user?.username}</h2>
         <p>Lorem ipsum dolor sit amet </p>
       </div>
       <div className="info">
@@ -85,7 +101,13 @@ const Details = () => {
             <img src="/public/arrowDown.png" alt="" />
           </div>
         </div>
-        <button onClick={handleBlockUser}>Block User</button>
+        <button onClick={handleBlockUser}>
+          {isCurrentUserBlocked
+            ? "You're Blocked!"
+            : isReceiverBlocked
+            ? "User Blocked!"
+            : "Block User"}
+        </button>
         <button className="logout" onClick={() => auth.signOut()}>
           Logout
         </button>
