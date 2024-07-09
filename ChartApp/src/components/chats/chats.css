@@ -68,6 +68,16 @@
 
       &.own {
         align-self: flex-end;
+
+        p {
+          background-color: #5183fe !important;
+          padding: 20px;
+          border-radius: 10px;
+        }
+        span {
+          font-size: 13px;
+          color: #a3a3a3fb;
+        }
       }
 
       .texts {

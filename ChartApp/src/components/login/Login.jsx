@@ -25,6 +25,7 @@ const Login = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const formData = new FormData(e.target);
     const { username, email, password } = Object.fromEntries(formData);
@@ -41,7 +42,7 @@ const Login = () => {
       await setDoc(doc(db, "userChats", res.user.uid), {
         chats: [],
       });
-      setLoading(true);
+      setLoading(false);
       toast.success("Account  Created,you can login Now!");
       // console.log(res);
     } catch (error) {
@@ -62,7 +63,7 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success("Login Success");
       setLoading(false);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       toast.error(error.message);
       setLoading(false);

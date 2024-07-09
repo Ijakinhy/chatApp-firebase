@@ -52,7 +52,7 @@ const Chats = () => {
   };
 
   const handleSendMessage = async () => {
-    if (text === "" && chat.lastMessage === "") return;
+    if (text === "" && !chat.lastMessage) return;
     let imgURL = null;
     try {
       if (img.file) {
@@ -119,7 +119,7 @@ const Chats = () => {
         {chat?.messages?.map((message) => (
           <div
             className={
-              message.senderId === currentUser.id ? "message own" : "message"
+              message.senderId === currentUser.id ? "message own " : "message"
             }
             key={message?.createdAt}
           >

@@ -29,7 +29,7 @@ function App() {
   if (isLoading) return <div className="loading">Loading...</div>;
   return (
     <div className="container">
-      {currentUser?.username ? (
+      {currentUser ? (
         <>
           {<List />}
           {chatId && <Chat />}

@@ -55,9 +55,9 @@ const ChatList = () => {
     );
     userChats[chatIndex].isSeen = true;
     try {
-      // await updateDoc(doc(db, "userChats", currentUser.id), {
-      //   chats: userChats,
-      // });
+      await updateDoc(doc(db, "userChats", currentUser.id), {
+        chats: userChats,
+      });
       dispatch(
         changeChat({ chatId: chat.chatId, user: chat.user, currentUser })
       );
@@ -97,7 +97,8 @@ const ChatList = () => {
             key={chat?.chatId}
             onClick={() => handleSelectChat(chat)}
             style={{
-              backgroundColor: chat.isSeen ? "transparent" : "#5183fe",
+              backgroundColor:
+                chat.isSeen || !chat.lastMessage ? "transparent" : "#5183fe",
             }}
           >
             <img
