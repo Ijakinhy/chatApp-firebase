@@ -24,7 +24,7 @@ const chatSlice = createSlice({
           user: user,
         };
       } else {
-        return { ...state, chatId, user: user, chatId };
+        return { ...state, chatId, user: user };
       }
     },
     blockUser: (state) => {
