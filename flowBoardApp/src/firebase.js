@@ -1,4 +1,7 @@
 import { initializeApp } from "firebase/app";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAUXJvVx5OPs0KPtG8z7t7vF8ts9hF3Jls",
@@ -14,10 +17,10 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const fbFunctions = getFunctions(app);
 
-export { auth, db, fbFunctions };
-
 if (process.env.NODE_ENV === "development") {
   connectAuthEmulator(auth, "http://localhost:9099");
   connectFirestoreEmulator(db, "localhost", 8080);
   connectFunctionsEmulator(fbFunctions, "localhost", 5001);
 }
+
+export { auth, db, fbFunctions };

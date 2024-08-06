@@ -2,7 +2,12 @@ import { Button, Container, Stack, TextField, Typography } from "@mui/material";
 import logoImg from "../../assets/logo.svg";
 import ImageEl from "../../components/utils/ImageEl";
 import { useState } from "react";
-
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../../firebase";
+import { useSelector } from "react-redux";
 const initForm = {
   email: "",
   password: "",
@@ -10,6 +15,7 @@ const initForm = {
 
 const AuthScreen = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState(initForm);
 
   const authText = isLogin ? "Do not have account" : "Already  have account";
@@ -20,7 +26,30 @@ const AuthScreen = () => {
       [event.target.name]: event.target.value,
     }));
 
-  const handleAuth = async () => {};
+  const handleAuth = async () => {
+    try {
+      if (isLogin) {
+        await signInWithEmailAndPassword(auth, form.email, form.password);
+        setIsLoading(true);
+      } else {
+        const res = await createUserWithEmailAndPassword(
+          auth,
+          form.email,
+          form.password
+        );
+        setIsLoading(true);
+        console.log(res);
+      }
+    } catch (error) {
+      const msg = error.code.split("auth/")[1].split("-").join(" ");
+
+      console.log(msg);
+    } finally {
+      setForm(initForm);
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Container
       maxWidth="xs"
@@ -49,7 +78,8 @@ const AuthScreen = () => {
           label="Password"
         />
         <Button
-          disabled={!form.email.trim() || !form.password.trim()}
+          onClick={handleAuth}
+          disabled={isLoading || !form.email.trim() || !form.password.trim()}
           size="large"
           variant="contained"
         >
