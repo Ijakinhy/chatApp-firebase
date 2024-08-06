@@ -50,6 +50,9 @@ const AuthScreen = () => {
     }
   };
 
+  const { name } = useSelector((state) => state.users);
+  console.log(name);
+
   return (
     <Container
       maxWidth="xs"
