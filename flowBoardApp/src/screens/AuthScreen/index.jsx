@@ -7,7 +7,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../../firebase";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 const initForm = {
   email: "",
   password: "",
@@ -19,7 +19,7 @@ const AuthScreen = () => {
   const [form, setForm] = useState(initForm);
 
   const authText = isLogin ? "Do not have account" : "Already  have account";
-
+  const dispatch = useDispatch();
   const handleChange = (event) =>
     setForm((oldForm) => ({
       ...oldForm,
@@ -50,8 +50,7 @@ const AuthScreen = () => {
     }
   };
 
-  const { name } = useSelector((state) => state.users);
-  console.log(name);
+  const { loading, isLoggedIn } = useSelector((state) => state.user);
 
   return (
     <Container
@@ -73,8 +72,10 @@ const AuthScreen = () => {
           onChange={handleChange}
           name="email"
           label="Email"
+          type="email"
         />
         <TextField
+          type="password"
           value={form.password}
           onChange={handleChange}
           name="password"
