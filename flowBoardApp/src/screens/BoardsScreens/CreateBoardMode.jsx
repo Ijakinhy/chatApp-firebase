@@ -11,12 +11,22 @@ import {
 import React, { useState } from "react";
 import ModalHeader from "../../components/layout/ModalHeader";
 import { colors } from "../../theme";
-
+import useApp from "../../hooks/useApp";
 const CreateBoardMode = ({ closeModal }) => {
   const [name, setName] = useState("");
   const [color, setColor] = useState(0);
-
-  console.log(color, name);
+  const [loading, setLoading] = useState(false);
+  const { createBoard } = useApp();
+  const handleCreateBoard = async () => {
+    try {
+      setLoading(true);
+      await createBoard({ name, color });
+      closeModal();
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
 
   return (
     <Dialog open onClose={closeModal} fullWidth maxWidth="xs">
@@ -47,7 +57,12 @@ const CreateBoardMode = ({ closeModal }) => {
             ))}
           </Stack>
         </Stack>
-        <Button variant="contained" size="large">
+        <Button
+          onClick={() => handleCreateBoard()}
+          variant="contained"
+          size="large"
+          disabled={loading}
+        >
           Create
         </Button>
       </Stack>

@@ -9,6 +9,7 @@ import AppLoader from "./components/layout/AppLoader";
 import PublicOnlyRoute from "./components/utils/PublicOnlyRoute";
 import BoardsScreen from "./screens/BoardsScreens";
 import PrivateRoute from "./components/utils/PrivateRoute";
+import Notification from "./Notification";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ export default function App() {
           />
         </Routes>
       </BrowserRouter>
+      <Notification />
     </div>
   );
 }
