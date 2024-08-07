@@ -5,16 +5,20 @@ import TopBar from "./TopBar";
 import BoardCard from "./BoardCard";
 import useApp from "../../hooks/useApp";
 import { useDispatch, useSelector } from "react-redux";
-import { setBoards } from "../../slices/BoardsSlice";
+import { fetchBoards, setBoards } from "../../slices/BoardsSlice";
+import { getAuth } from "firebase/auth";
+import { auth } from "../../firebase";
 
 const BoardsScreen = () => {
   const [showModal, setShowModal] = useState(false);
-  const { fetchBoards } = useApp();
   const dispatch = useDispatch();
+  const uid = getAuth().currentUser.uid;
+
   useEffect(() => {
-    const boards = fetchBoards();
+    const boards = dispatch(fetchBoards());
+    console.log(` index ${boards}`);
+
     // dispatch(setBoards(boards));
-    console.log(boards);
   }, []);
 
   return (

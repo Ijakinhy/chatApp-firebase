@@ -1,9 +1,12 @@
-import { collection, getDoc, getDocs } from "firebase/firestore";
-import React from "react";
-import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
-import { addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  serverTimestamp,
+} from "firebase/firestore";
 import { toast } from "react-toastify";
+import { db } from "../firebase";
 
 const useApp = () => {
   const {
@@ -36,8 +39,6 @@ const useApp = () => {
         id: doc.id,
       }));
       console.log(boards);
-
-      return boards;
     } catch (error) {
       console.log(error);
     }

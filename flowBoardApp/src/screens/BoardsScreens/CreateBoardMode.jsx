@@ -1,26 +1,29 @@
-import { ClassOutlined, Close } from "@mui/icons-material";
 import {
   Box,
   Button,
   Dialog,
-  IconButton,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
+import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import ModalHeader from "../../components/layout/ModalHeader";
+import { createBoard } from "../../slices/BoardsSlice";
 import { colors } from "../../theme";
-import useApp from "../../hooks/useApp";
 const CreateBoardMode = ({ closeModal }) => {
   const [name, setName] = useState("");
   const [color, setColor] = useState(0);
   const [loading, setLoading] = useState(false);
-  const { createBoard } = useApp();
+  const dispatch = useDispatch();
+
   const handleCreateBoard = async () => {
+    const uid = getAuth().currentUser.uid;
+
     try {
       setLoading(true);
-      await createBoard({ name, color });
+      dispatch(createBoard({ name, color, uid }));
       closeModal();
     } catch (error) {
       console.log(error);

@@ -1,13 +1,13 @@
 import { Button, Container, Stack, TextField, Typography } from "@mui/material";
-import logoImg from "../../assets/logo.svg";
-import ImageEl from "../../components/utils/ImageEl";
-import { useState } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import logoImg from "../../assets/logo.svg";
+import ImageEl from "../../components/utils/ImageEl";
+import { auth } from "../../firebase";
 const initForm = {
   email: "",
   password: "",
@@ -49,8 +49,6 @@ const AuthScreen = () => {
       setIsLoading(false);
     }
   };
-
-  const { loading, isLoggedIn } = useSelector((state) => state.user);
 
   return (
     <Container
