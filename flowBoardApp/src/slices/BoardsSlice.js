@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   addDoc,
   collection,
+  doc,
   getDocs,
   serverTimestamp,
 } from "firebase/firestore";
@@ -15,6 +16,7 @@ const initialState = {
 
 export const createBoard = createAsyncThunk(
   "user/createBoard`",
+
   async (payload) => {
     const { name, color, uid } = payload;
     const BoardsColRef = collection(db, `users/${uid}/boards`);
@@ -35,9 +37,8 @@ export const createBoard = createAsyncThunk(
 
 export const fetchBoards = createAsyncThunk(
   "users/fetchBoards",
-  async (payload) => {
-    const { uid } = payload;
-    const BoardsColRef = collection(db, `users/${auth.currentUser.uid}/boards`);
+  async (uid) => {
+    const BoardsColRef = collection(db, `users/${uid}/boards`);
     try {
       const boardsSnap = await getDocs(BoardsColRef);
       const boards = boardsSnap.docs.map((doc) => ({
@@ -45,6 +46,7 @@ export const fetchBoards = createAsyncThunk(
         ...doc.data(),
       }));
       console.log(boards);
+      return boards;
     } catch (error) {
       console.log(error.message);
     }
@@ -59,8 +61,22 @@ export const boardListSlice = createSlice({
       return { ...state, boards: action.payload, areBoardsFetch: true };
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchBoards.pending, (state) => {
+        return { ...state };
+      })
+      .addCase(fetchBoards.fulfilled, (state, action) => {
+        return { ...state, boards: action.payload, areBoardsFetch: true };
+      })
+      .addCase(fetchBoards.rejected, (state) => {
+        return {
+          ...state,
+          areBoardsFetch: false,
+          error: action.error.message,
+        };
+      });
+  },
 });
-
-export const { setBoards } = boardListSlice.actions;
 
 export default boardListSlice.reducer;

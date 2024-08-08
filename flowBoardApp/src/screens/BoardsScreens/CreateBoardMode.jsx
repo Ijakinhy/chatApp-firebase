@@ -10,7 +10,7 @@ import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import ModalHeader from "../../components/layout/ModalHeader";
-import { createBoard } from "../../slices/BoardsSlice";
+import { createBoard, fetchBoards } from "../../slices/BoardsSlice";
 import { colors } from "../../theme";
 const CreateBoardMode = ({ closeModal }) => {
   const [name, setName] = useState("");
@@ -28,6 +28,8 @@ const CreateBoardMode = ({ closeModal }) => {
     } catch (error) {
       console.log(error);
       setLoading(false);
+    } finally {
+      dispatch(fetchBoards(uid));
     }
   };
 
