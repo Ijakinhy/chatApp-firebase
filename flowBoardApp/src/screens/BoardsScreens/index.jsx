@@ -6,27 +6,35 @@ import { fetchBoards } from "../../slices/BoardsSlice";
 import BoardCard from "./BoardCard";
 import CreateBoardMode from "./CreateBoardMode";
 import TopBar from "./TopBar";
+import AppLoader from "../../components/layout/AppLoader";
+import NoBoards from "./NoBoars";
 
 const BoardsScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const uid = auth.currentUser.uid;
-  const { boards, areBoardsFetch } = useSelector((state) => state.boards);
+  const { boards, areBoardsFetch, loading } = useSelector(
+    (state) => state.boards
+  );
 
   useEffect(() => {
-    dispatch(fetchBoards(uid));
+    if (!areBoardsFetch) dispatch(fetchBoards(uid));
   }, [areBoardsFetch, uid]);
 
+  if (loading) return <AppLoader />;
   return (
     <>
       <TopBar openModal={() => setShowModal(!showModal)} />
       {showModal && <CreateBoardMode closeModal={() => setShowModal(false)} />}
-      {/* <NoBoars /> */}
-      <Stack mt={5} px={3}>
-        <Grid container spacing={4}>
-          <BoardCard />
-        </Grid>
-      </Stack>
+      {boards?.length > 0 ? (
+        <Stack mt={5} px={3}>
+          <Grid container spacing={4}>
+            <BoardCard />
+          </Grid>
+        </Stack>
+      ) : (
+        <NoBoards />
+      )}
     </>
   );
 };

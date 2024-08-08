@@ -1,7 +1,7 @@
 import { Stack, Typography } from "@mui/material";
 import React from "react";
 
-const NoBoars = () => {
+const NoBoards = () => {
   return (
     <Stack textAlign="center" mt={15} spacing={1}>
       <Typography variant="h5">No boards created</Typography>
@@ -10,4 +10,4 @@ const NoBoars = () => {
   );
 };
 
-export default NoBoars;
+export default NoBoards;

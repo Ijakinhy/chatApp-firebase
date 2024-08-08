@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Grid, IconButton, Stack, Typography } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
 import { useSelector } from "react-redux";
+import { colors } from "../../theme";
 
 const BoardCard = () => {
   const { boards } = useSelector((state) => state.boards);
@@ -9,21 +10,13 @@ const BoardCard = () => {
   return (
     <>
       {boards?.map((board) => {
-        const { createdAt } = board;
-        const dateString = createdAt?.toDate();
-        const formattedDate = dateString?.toLocaleString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        });
-
         return (
           <Grid item xs={3} key={board.id}>
             <Stack
               p={2}
               bgcolor="background.paper"
               borderLeft="5px solid"
-              borderColor="white"
+              borderColor={colors[board.color]}
             >
               <Stack direction="row" justifyContent="space-between">
                 <Box width="50%">
@@ -42,7 +35,7 @@ const BoardCard = () => {
                 </IconButton>
               </Stack>
               <Typography variant="caption">
-                {`Created At: ${formattedDate}
+                {`Created At: ${board.createdAt}
               `}
               </Typography>
             </Stack>

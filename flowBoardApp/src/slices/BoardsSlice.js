@@ -4,6 +4,8 @@ import {
   collection,
   doc,
   getDocs,
+  orderBy,
+  query,
   serverTimestamp,
 } from "firebase/firestore";
 import { toast } from "react-toastify";
@@ -12,6 +14,7 @@ import { auth, db } from "../firebase";
 const initialState = {
   boards: [],
   areBoardsFetch: false,
+  loading: true,
 };
 
 export const createBoard = createAsyncThunk(
@@ -26,29 +29,39 @@ export const createBoard = createAsyncThunk(
         color,
         createdAt: serverTimestamp(),
       });
-
       toast.success("Board created successfully!");
     } catch (error) {
       console.log(error.message);
     }
   }
 );
-// fetch boards
 
 export const fetchBoards = createAsyncThunk(
   "users/fetchBoards",
   async (uid) => {
     const BoardsColRef = collection(db, `users/${uid}/boards`);
     try {
-      const boardsSnap = await getDocs(BoardsColRef);
-      const boards = boardsSnap.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
+      const q = query(BoardsColRef, orderBy("createdAt", "desc"));
+      const boardsSnap = await getDocs(q);
+      const boards = boardsSnap.docs.map((doc) => {
+        const createdAt = doc.data().createdAt?.toDate();
+
+        return {
+          id: doc.id,
+          ...doc.data(),
+          createdAt,
+        };
+      });
+      boards.sort((a, b) => b.createdAt - a.createdAt);
+      const sortedBoards = boards.map((board) => ({
+        ...board,
+        createdAt: board.createdAt?.toLocaleDateString(),
       }));
-      console.log(boards);
-      return boards;
+
+      return sortedBoards;
     } catch (error) {
       console.log(error.message);
+      throw error;
     }
   }
 );
@@ -64,16 +77,22 @@ export const boardListSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchBoards.pending, (state) => {
-        return { ...state };
+        return { ...state, loading: true };
       })
       .addCase(fetchBoards.fulfilled, (state, action) => {
-        return { ...state, boards: action.payload, areBoardsFetch: true };
+        return {
+          ...state,
+          boards: action.payload,
+          areBoardsFetch: true,
+          loading: false,
+        };
       })
       .addCase(fetchBoards.rejected, (state) => {
         return {
           ...state,
           areBoardsFetch: false,
           error: action.error.message,
+          loading: false,
         };
       });
   },

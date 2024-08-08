@@ -8,30 +8,38 @@ import {
 } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ModalHeader from "../../components/layout/ModalHeader";
 import { createBoard, fetchBoards } from "../../slices/BoardsSlice";
 import { colors } from "../../theme";
+import { toast } from "react-toastify";
+import AppLoader from "../../components/layout/AppLoader";
 const CreateBoardMode = ({ closeModal }) => {
   const [name, setName] = useState("");
   const [color, setColor] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
   const handleCreateBoard = async () => {
     const uid = getAuth().currentUser.uid;
 
     try {
-      setLoading(true);
-      dispatch(createBoard({ name, color, uid }));
-      closeModal();
+      if (!name) {
+        toast.error("Board name is required");
+      } else {
+        setIsLoading(true);
+        dispatch(createBoard({ name, color, uid }));
+        closeModal();
+      }
     } catch (error) {
       console.log(error);
-      setLoading(false);
+      setIsLoading(false);
     } finally {
       dispatch(fetchBoards(uid));
+      setIsLoading(false);
     }
   };
+  // if (isLoading) return <AppLoader />;
 
   return (
     <Dialog open onClose={closeModal} fullWidth maxWidth="xs">
@@ -66,7 +74,7 @@ const CreateBoardMode = ({ closeModal }) => {
           onClick={() => handleCreateBoard()}
           variant="contained"
           size="large"
-          disabled={loading}
+          disabled={isLoading}
         >
           Create
         </Button>
