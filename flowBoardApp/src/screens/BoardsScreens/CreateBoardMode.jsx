@@ -10,7 +10,11 @@ import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ModalHeader from "../../components/layout/ModalHeader";
-import { createBoard, fetchBoards } from "../../slices/BoardsSlice";
+import {
+  createBoard,
+  fetchBoards,
+  showMessage,
+} from "../../slices/BoardsSlice";
 import { colors } from "../../theme";
 import { toast } from "react-toastify";
 import AppLoader from "../../components/layout/AppLoader";
@@ -25,14 +29,16 @@ const CreateBoardMode = ({ closeModal }) => {
 
     try {
       if (!name) {
-        toast.error("Board name is required");
+        dispatch(showMessage("Board name is required"));
       } else {
         setIsLoading(true);
         dispatch(createBoard({ name, color, uid }));
         closeModal();
+        dispatch(showMessage("New Board created"));
       }
     } catch (error) {
       console.log(error);
+      dispatch(showMessage(error.message));
       setIsLoading(false);
     } finally {
       dispatch(fetchBoards(uid));

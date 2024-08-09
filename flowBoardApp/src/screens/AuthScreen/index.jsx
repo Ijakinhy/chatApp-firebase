@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import logoImg from "../../assets/logo.svg";
 import ImageEl from "../../components/utils/ImageEl";
 import { auth } from "../../firebase";
+import { showMessage } from "../../slices/BoardsSlice";
 const initForm = {
   email: "",
   password: "",
@@ -38,10 +39,10 @@ const AuthScreen = () => {
           form.password
         );
         setIsLoading(true);
-        console.log(res);
       }
     } catch (error) {
       const msg = error.code.split("auth/")[1].split("-").join(" ");
+      dispatch(showMessage(msg));
 
       console.log(msg);
     } finally {

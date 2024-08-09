@@ -2,19 +2,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   addDoc,
   collection,
-  doc,
   getDocs,
   orderBy,
   query,
   serverTimestamp,
 } from "firebase/firestore";
-import { toast } from "react-toastify";
-import { auth, db } from "../firebase";
+import { db } from "../firebase";
 
 const initialState = {
   boards: [],
   areBoardsFetch: false,
   loading: true,
+  massage: "",
 };
 
 export const createBoard = createAsyncThunk(
@@ -29,7 +28,6 @@ export const createBoard = createAsyncThunk(
         color,
         createdAt: serverTimestamp(),
       });
-      toast.success("Board created successfully!");
     } catch (error) {
       console.log(error.message);
     }
@@ -70,8 +68,8 @@ export const boardListSlice = createSlice({
   name: "boards",
   initialState,
   reducers: {
-    setBoards: (state, action) => {
-      return { ...state, boards: action.payload, areBoardsFetch: true };
+    showMessage: (state, action) => {
+      return { ...state, message: action.payload };
     },
   },
   extraReducers: (builder) => {
@@ -94,8 +92,19 @@ export const boardListSlice = createSlice({
           error: action.error.message,
           loading: false,
         };
+      })
+      .addCase(createBoard.pending, (state) => {
+        return { ...state, loading: true };
+      })
+      .addCase(createBoard.fulfilled, (state) => {
+        return { ...state, loading: false, massage: "New Board Created" };
+      })
+      .addCase(createBoard.rejected, (state, action) => {
+        return { ...state, loading: false, message: action.error.message };
       });
   },
 });
+
+export const { showMessage } = boardListSlice.actions;
 
 export default boardListSlice.reducer;
