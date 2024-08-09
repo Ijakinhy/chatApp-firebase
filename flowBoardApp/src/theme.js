@@ -18,6 +18,24 @@ export const theme = createTheme({
       main: "#BEA4FF",
     },
   },
+  components: {
+    MuiSnackbar: {
+      defaultProps: {
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+      },
+    },
+    MuiSnackbarContent: {
+      styleOverrides: {
+        message: {
+          fontWeight: 600,
+          textTransform: "capitalize",
+        },
+      },
+    },
+  },
   typography: {
     fontFamily: "lato, sans-serif",
     button: {
