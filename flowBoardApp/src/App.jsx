@@ -1,15 +1,14 @@
-import React, { useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import AuthScreen from "./screens/AuthScreen";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeLoginStatus } from "./slices/userSlice";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AppLoader from "./components/layout/AppLoader";
-import PublicOnlyRoute from "./components/utils/PublicOnlyRoute";
-import BoardsScreen from "./screens/BoardsScreens";
 import PrivateRoute from "./components/utils/PrivateRoute";
-import Notification from "./Notification";
+import PublicOnlyRoute from "./components/utils/PublicOnlyRoute";
+import { auth } from "./firebase";
+import AuthScreen from "./screens/AuthScreen";
+import BoardsScreen from "./screens/BoardsScreens";
+import { changeLoginStatus } from "./slices/userSlice";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -39,7 +38,6 @@ export default function App() {
           />
         </Routes>
       </BrowserRouter>
-      <Notification />
     </div>
   );
 }

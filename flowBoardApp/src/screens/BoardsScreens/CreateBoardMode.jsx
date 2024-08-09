@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import ModalHeader from "../../components/layout/ModalHeader";
 import {
   createBoard,
@@ -16,8 +16,6 @@ import {
   showMessage,
 } from "../../slices/BoardsSlice";
 import { colors } from "../../theme";
-import { toast } from "react-toastify";
-import AppLoader from "../../components/layout/AppLoader";
 const CreateBoardMode = ({ closeModal }) => {
   const [name, setName] = useState("");
   const [color, setColor] = useState(0);

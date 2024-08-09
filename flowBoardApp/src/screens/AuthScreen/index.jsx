@@ -38,6 +38,8 @@ const AuthScreen = () => {
           form.email,
           form.password
         );
+        console.log(res);
+
         setIsLoading(true);
       }
     } catch (error) {
