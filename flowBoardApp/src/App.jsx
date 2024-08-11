@@ -8,14 +8,14 @@ import PublicOnlyRoute from "./components/utils/PublicOnlyRoute";
 import { auth } from "./firebase";
 import AuthScreen from "./screens/AuthScreen";
 import BoardsScreen from "./screens/BoardsScreens";
-import { changeLoginStatus } from "./slices/userSlice";
+import { changeLoginStatus, fetchUserInfo } from "./slices/userSlice";
 
 export default function App() {
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.user);
+  const { loading, currentUser } = useSelector((state) => state.user);
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
-      dispatch(changeLoginStatus(!!user));
+      dispatch(fetchUserInfo(user?.uid));
     });
 
     return () => unSub();

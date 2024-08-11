@@ -3,13 +3,16 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import logoImg from "../../assets/logo.svg";
 import ImageEl from "../../components/utils/ImageEl";
-import { auth } from "../../firebase";
+import { auth, db } from "../../firebase";
 import { showMessage } from "../../slices/BoardsSlice";
+import FormEl from "../../components/utils/FormEl";
+import { doc, setDoc } from "firebase/firestore";
 const initForm = {
+  username: "",
   email: "",
   password: "",
 };
@@ -19,6 +22,7 @@ const AuthScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState(initForm);
 
+  const btn = useRef();
   const authText = isLogin ? "Do not have account" : "Already  have account";
   const dispatch = useDispatch();
   const handleChange = (event) =>
@@ -27,26 +31,31 @@ const AuthScreen = () => {
       [event.target.name]: event.target.value,
     }));
 
-  const handleAuth = async () => {
-    try {
-      if (isLogin) {
-        await signInWithEmailAndPassword(auth, form.email, form.password);
-        setIsLoading(true);
-      } else {
-        const res = await createUserWithEmailAndPassword(
-          auth,
-          form.email,
-          form.password
-        );
-        console.log(res);
+  const handleAuth = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const { username, email, password } = Object.fromEntries(formData);
 
-        setIsLoading(true);
+    try {
+      if (btn.current.name === "register") {
+        const res = await createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(db, "user", res.user.uid), {
+          username,
+          email,
+          uid: res.user.uid,
+        });
+        await setDoc(doc(db, "boards", res.user.uid), {
+          boards: [],
+        });
+      } else if (btn.current.name === "login") {
+        const res = await signInWithEmailAndPassword(auth, email, password);
+        // console.log("id res", res.user.uid);
+
+        dispatch(fetchBoards(res.user.uid));
       }
     } catch (error) {
-      const msg = error.code.split("auth/")[1].split("-").join(" ");
+      const msg = error.code?.split("auth/")[1].split("-").join(" ");
       dispatch(showMessage(msg));
-
-      console.log(msg);
     } finally {
       setForm(initForm);
       setIsLoading(false);
@@ -68,28 +77,46 @@ const AuthScreen = () => {
         </Typography>
       </Stack>
       <Stack spacing={2}>
-        <TextField
-          value={form.email}
-          onChange={handleChange}
-          name="email"
-          label="Email"
-          type="email"
-        />
-        <TextField
-          type="password"
-          value={form.password}
-          onChange={handleChange}
-          name="password"
-          label="Password"
-        />
-        <Button
-          onClick={handleAuth}
-          disabled={isLoading || !form.email.trim() || !form.password.trim()}
-          size="large"
-          variant="contained"
+        <FormEl
+          onSubmit={handleAuth}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
         >
-          {isLogin ? "Login" : "Register"}
-        </Button>
+          <TextField
+            value={form.username}
+            onChange={handleChange}
+            name="username"
+            label="Username"
+            type="text"
+          />
+          <TextField
+            value={form.email}
+            onChange={handleChange}
+            name="email"
+            label="Email"
+            type="email"
+          />
+          <TextField
+            type="password"
+            onChange={handleChange}
+            value={form.password}
+            name="password"
+            label="Password"
+          />
+          <Button
+            type="submit"
+            disabled={isLoading || !form.email.trim() || !form.password.trim()}
+            size="large"
+            name={isLogin ? "login" : "register"}
+            variant="contained"
+            ref={btn}
+          >
+            {isLogin ? "Login" : "Register"}
+          </Button>
+        </FormEl>
       </Stack>
       <Typography
         onClick={() => setIsLogin((state) => !state)}
