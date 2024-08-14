@@ -26,11 +26,14 @@ const BoardScreen = () => {
   const boardDataList = useMemo(() => {
     return data;
   }, [data]);
-  console.log(boardDataList);
+
+  console.log(data);
 
   const handleFetchBoard = async () => {
     try {
-      dispatch(fetchBoard(currentUser.uid));
+      const result = dispatch(
+        fetchBoard({ uid: currentUser.uid, boardId: singleBoard?.id })
+      );
 
       // if (boardData) {
       //   setData(boardData.tabs);

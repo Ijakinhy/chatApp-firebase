@@ -49,29 +49,15 @@ export const fetchBoards = createAsyncThunk(
 
     try {
       const q = query(boardsColRef, orderBy("createdAt", "desc"));
-      // // const q = query(BoardsColRef, orderBy("createdAt", "desc"));
-      // const docRef = doc(db, "boards", uid);
+
       const docSnap = await getDocs(q);
-      // console.log(docSnap);
 
       const boards = docSnap.docs.map((doc) => {
-        console.log(doc.data());
-
         return {
           ...doc.data(),
           id: doc.id,
-          };
+        };
       });
-
-      // const boards = boardsSnap.docs.map((doc) => {
-      //   const createdAt = doc.data().createdAt?.toDate();
-
-      //   return {
-      //     id: doc.id,
-      //     ...doc.data(),
-      //     createdAt,
-      //   };
-      // });
 
       boards.sort((a, b) => b.createdAt - a.createdAt);
       const sortedBoards = boards.map((board) => ({

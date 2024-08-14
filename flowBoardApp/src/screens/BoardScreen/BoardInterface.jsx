@@ -20,8 +20,6 @@ const BoardInterface = ({ boardData }) => {
       )}
       <Grid container mt={2} spacing={2} px={4}>
         {Object.keys(statusMap).map((status) => {
-          console.log(tabs[status]);
-
           return (
             <BoardTab
               key={status}

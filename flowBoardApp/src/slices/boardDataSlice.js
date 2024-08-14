@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 
 const initialState = {
@@ -9,13 +9,15 @@ const initialState = {
   loading: true,
   data: null,
 };
-
+// fetching the board Data
 export const fetchBoard = createAsyncThunk(
   "user/boardData",
-  async (boardId) => {
+  async (payload) => {
+    const { uid, boardId } = payload;
     try {
-      const docRef = doc(db, "boardsData", boardId);
+      const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
       const docSnap = await getDoc(docRef);
+
       if (docSnap.exists()) {
         const boardData = docSnap.data();
 
@@ -42,8 +44,8 @@ const boardDataSlice = createSlice({
           boardData: action.payload,
           areBoardDataFetched: true,
           loading: false,
-          lastUpdated: action.payload.lastUpdated,
-          data: action.payload.tabs,
+          lastUpdated: action.payload?.lastUpdated,
+          data: action.payload?.tabs,
         };
       })
       .addCase(fetchBoard.rejected, (state) => {
