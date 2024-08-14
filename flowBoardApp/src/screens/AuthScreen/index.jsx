@@ -45,9 +45,9 @@ const AuthScreen = () => {
           uid: res.user.uid,
         });
 
-        await setDoc(doc(db, "boards", res.user.uid), {
-          boards: [],
-        });
+        // await setDoc(doc(db, "boards", res.user.uid), {
+        //   boards: [],
+        // });
       } else if (btn.current.name === "login") {
         const res = await signInWithEmailAndPassword(auth, email, password);
         // console.log("id res", res.user.uid);

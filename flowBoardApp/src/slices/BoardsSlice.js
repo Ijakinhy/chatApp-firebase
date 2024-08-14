@@ -27,17 +27,14 @@ export const createBoard = createAsyncThunk(
 
   async (payload) => {
     const { name, color, uid } = payload;
-    // const BoardsColRef = collection(db, `users/${uid}/boards`);
-    const docRef = doc(db, "boards", uid);
+    const colRef = collection(db, `users/${uid}/boards`);
 
     try {
-      const res = await updateDoc(docRef, {
-        boards: arrayUnion({
-          id: `${name}-${Date.now()}`,
-          name,
-          color,
-          createdAt: new Date().toLocaleString("en-US"),
-        }),
+      const res = await addDoc(colRef, {
+        id: `${name}-${Date.now()}`,
+        name,
+        color,
+        createdAt: new Date().toLocaleString("en-US"),
       });
     } catch (error) {
       console.log(error.message);
@@ -48,14 +45,23 @@ export const createBoard = createAsyncThunk(
 export const fetchBoards = createAsyncThunk(
   "users/fetchBoards",
   async (uid) => {
-    // const BoardsColRef = collection(db, "boards");
+    const boardsColRef = collection(db, `users/${uid}/boards`);
 
     try {
-      // const q = query(BoardsColRef, orderBy("createdAt", "desc"));
-      const docRef = doc(db, "boards", uid);
-      const docSnap = await getDoc(docRef);
+      const q = query(boardsColRef, orderBy("createdAt", "desc"));
+      // // const q = query(BoardsColRef, orderBy("createdAt", "desc"));
+      // const docRef = doc(db, "boards", uid);
+      const docSnap = await getDocs(q);
+      // console.log(docSnap);
 
-      const boards = docSnap.data().boards || [];
+      const boards = docSnap.docs.map((doc) => {
+        console.log(doc.data());
+
+        return {
+          ...doc.data(),
+          id: doc.id,
+          };
+      });
 
       // const boards = boardsSnap.docs.map((doc) => {
       //   const createdAt = doc.data().createdAt?.toDate();

@@ -1,26 +1,22 @@
 const { initializeApp } = require("firebase-admin/app");
 const { getFirestore, FieldValue } = require("firebase-admin/firestore");
-const {
-  onDocumentCreated,
-  onDocumentUpdated,
-} = require("firebase-functions/v2/firestore");
+const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 
 initializeApp();
 
-exports.createBoardData = onDocumentUpdated(
-  "boards/{boardId}",
+exports.createBoardData = onDocumentCreated(
+  "users/{uid}/boards/{boardId}",
   async (event) => {
-    const { boardId } = event.params;
+    const { uid, boardId } = event.params;
     const firestore = getFirestore();
 
-    return await firestore.doc(`boardsData/${boardId}`).set({
+    return await firestore.doc(`users/${uid}/boardsData/${boardId}`).set({
       tabs: {
         toDos: [],
         inProgress: [],
         completed: [],
       },
       lastUpdated: FieldValue.serverTimestamp(),
-      boardId: boardId,
     });
   }
 );
