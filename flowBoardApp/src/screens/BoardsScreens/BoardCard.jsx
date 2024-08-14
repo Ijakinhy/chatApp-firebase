@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Grid, IconButton, Stack, Typography } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
 import { useSelector } from "react-redux";
 import { colors } from "../../theme";
+import { useNavigate } from "react-router-dom";
 
 const BoardCard = () => {
   const { boards } = useSelector((state) => state.boards);
+  const [loading, setLoading] = useState();
+  const navigate = useNavigate();
 
   return (
     <>
       {boards?.map((board) => {
+        const formattedDate = new Date(board.createdAt).toLocaleDateString();
         return (
           <Grid item xs={3} key={board.id}>
             <Stack
@@ -30,12 +34,15 @@ const BoardCard = () => {
                     {board.name}
                   </Typography>
                 </Box>
-                <IconButton size="small">
+                <IconButton
+                  size="small"
+                  onClick={() => navigate(`/${board.id}`)}
+                >
                   <LaunchIcon size="small" />
                 </IconButton>
               </Stack>
               <Typography variant="caption">
-                {`Created At: ${board.createdAt}
+                {`Created At: ${formattedDate}
               `}
               </Typography>
             </Stack>

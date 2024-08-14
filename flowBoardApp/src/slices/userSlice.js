@@ -18,8 +18,6 @@ export const fetchUserInfo = createAsyncThunk(
         return docSnap.data();
       }
 
-      console.log(docSnap.data());
-
       return docSnap.data();
     } catch (error) {
       console.log(error.message);

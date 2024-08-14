@@ -19,6 +19,12 @@ export const theme = createTheme({
     },
   },
   components: {
+    MuiIconButton: {
+      defaultProps: {
+        size: "small",
+        color: "white",
+      },
+    },
     MuiSnackbar: {
       defaultProps: {
         anchorOrigin: {

@@ -46,7 +46,7 @@ const CreateBoardMode = ({ closeModal }) => {
   // if (isLoading) return <AppLoader />;
 
   return (
-    <Dialog open onClose={closeModal} fullWidth maxWidth="xs">
+    <Dialog open fullWidth maxWidth="xs">
       <Stack p={2}>
         <ModalHeader title="Create Board" onClose={closeModal} />
         <Stack my={5} spacing={3}>

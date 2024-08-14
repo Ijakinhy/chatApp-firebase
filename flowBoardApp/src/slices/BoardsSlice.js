@@ -1,11 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   addDoc,
+  arrayUnion,
   collection,
+  doc,
+  getDoc,
   getDocs,
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -14,46 +18,61 @@ const initialState = {
   areBoardsFetch: false,
   loading: true,
   massage: "",
+  boardData: [],
+  areBoardDataFetch: false,
 };
-
+// create Board
 export const createBoard = createAsyncThunk(
   "user/createBoard`",
 
   async (payload) => {
     const { name, color, uid } = payload;
     const BoardsColRef = collection(db, `users/${uid}/boards`);
+    const colRef = collection(db, `users/${uid}/boards`);
+    const boardRef = collection(db, "boards");
+
     try {
-      const res = await addDoc(BoardsColRef, {
-        name,
-        color,
-        createdAt: serverTimestamp(),
+      const res = await (docRef,
+      {
+        boards: arrayUnion({
+          id: `${name}-${Date.now()}`,
+          name,
+          color,
+          createdAt: new Date().toLocaleString("en-US"),
+        }),
       });
     } catch (error) {
       console.log(error.message);
     }
   }
 );
-
+// fetch Boards
 export const fetchBoards = createAsyncThunk(
   "users/fetchBoards",
   async (uid) => {
-    const BoardsColRef = collection(db, `users/${uid}/boards`);
-    try {
-      const q = query(BoardsColRef, orderBy("createdAt", "desc"));
-      const boardsSnap = await getDocs(q);
-      const boards = boardsSnap.docs.map((doc) => {
-        const createdAt = doc.data().createdAt?.toDate();
+    // const BoardsColRef = collection(db, "boards");
 
-        return {
-          id: doc.id,
-          ...doc.data(),
-          createdAt,
-        };
-      });
+    try {
+      // const q = query(BoardsColRef, orderBy("createdAt", "desc"));
+      const docRef = doc(db, "boards", uid);
+      const docSnap = await getDoc(docRef);
+
+      const boards = docSnap.data().boards || [];
+
+      // const boards = boardsSnap.docs.map((doc) => {
+      //   const createdAt = doc.data().createdAt?.toDate();
+
+      //   return {
+      //     id: doc.id,
+      //     ...doc.data(),
+      //     createdAt,
+      //   };
+      // });
+
       boards.sort((a, b) => b.createdAt - a.createdAt);
       const sortedBoards = boards.map((board) => ({
         ...board,
-        createdAt: board.createdAt?.toLocaleDateString(),
+        createdAt: new Date(board.createdAt)?.toLocaleString(),
       }));
 
       return sortedBoards;
@@ -64,6 +83,9 @@ export const fetchBoards = createAsyncThunk(
   }
 );
 
+// fetch  Board Data
+
+// boardListSlice
 export const boardListSlice = createSlice({
   name: "boards",
   initialState,
@@ -89,7 +111,6 @@ export const boardListSlice = createSlice({
         return {
           ...state,
           areBoardsFetch: false,
-          error: action.error.message,
           loading: false,
         };
       })

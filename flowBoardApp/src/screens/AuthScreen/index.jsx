@@ -10,7 +10,7 @@ import ImageEl from "../../components/utils/ImageEl";
 import { auth, db } from "../../firebase";
 import { showMessage } from "../../slices/BoardsSlice";
 import FormEl from "../../components/utils/FormEl";
-import { doc, setDoc } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 const initForm = {
   username: "",
   email: "",
@@ -44,6 +44,7 @@ const AuthScreen = () => {
           email,
           uid: res.user.uid,
         });
+
         await setDoc(doc(db, "boards", res.user.uid), {
           boards: [],
         });
