@@ -27,13 +27,11 @@ export const createBoard = createAsyncThunk(
 
   async (payload) => {
     const { name, color, uid } = payload;
-    const BoardsColRef = collection(db, `users/${uid}/boards`);
-    const colRef = collection(db, `users/${uid}/boards`);
-    const boardRef = collection(db, "boards");
+    // const BoardsColRef = collection(db, `users/${uid}/boards`);
+    const docRef = doc(db, "boards", uid);
 
     try {
-      const res = await (docRef,
-      {
+      const res = await updateDoc(docRef, {
         boards: arrayUnion({
           id: `${name}-${Date.now()}`,
           name,
