@@ -2,10 +2,11 @@ import { ArrowBack, Delete } from "@mui/icons-material";
 import { AppBar, IconButton, Stack, Toolbar, Typography } from "@mui/material";
 import { colors } from "../../theme";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const BoardTopBar = ({ lastUpdated, name, color }) => {
+const BoardTopBar = ({ name, color }) => {
   const navigate = useNavigate();
-
+  const { lastUpdated } = useSelector((state) => state.boardData);
   return (
     <AppBar
       sx={{
@@ -23,7 +24,9 @@ const BoardTopBar = ({ lastUpdated, name, color }) => {
           </Typography>
         </Stack>
         <Stack alignItems="center" direction="row" spacing={3}>
-          <Typography variant="body2">Last updated: {lastUpdated}</Typography>
+          <Typography variant="body2">
+            Last updated: {lastUpdated?.toDate().toLocaleString()}
+          </Typography>
           <IconButton size="small" x>
             <Delete />
           </IconButton>

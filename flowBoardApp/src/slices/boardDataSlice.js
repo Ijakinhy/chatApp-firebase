@@ -58,7 +58,18 @@ export const updateBoardData = createAsyncThunk(
     }
   }
 );
-
+export const handleBoardDataUpdate = createAsyncThunk(
+  "addTask",
+  async (payload) => {
+    const { uid, boardId, tabs } = payload;
+    const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
+    try {
+      await updateDoc(docRef, { tabs, lastUpdated: serverTimestamp() });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+);
 const boardDataSlice = createSlice({
   name: "boardData",
   initialState,
@@ -95,6 +106,15 @@ const boardDataSlice = createSlice({
         return { ...state, loading: false };
       })
       .addCase(updateBoardData.rejected, (state) => {
+        return { ...state, loading: false };
+      })
+      .addCase(handleBoardDataUpdate.pending, (state) => {
+        return { ...state, loading: true };
+      })
+      .addCase(handleBoardDataUpdate.fulfilled, (state, action) => {
+        return { ...state, loading: false };
+      })
+      .addCase(handleBoardDataUpdate.rejected, (state) => {
         return { ...state, loading: false };
       });
   },

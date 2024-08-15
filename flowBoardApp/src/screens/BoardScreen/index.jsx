@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import AppLoader from "../../components/layout/AppLoader";
@@ -7,10 +7,10 @@ import BoardInterface from "./BoardInterface";
 import BoardTopBar from "./BoardTopBar";
 const BoardScreen = () => {
   const { boardId } = useParams();
-
   const { boardData, lastUpdated, data, loading } = useSelector(
     (state) => state.boardData
   );
+
   const { boards, areBoardsFetch } = useSelector((state) => state.boards);
 
   const { currentUser } = useSelector((state) => state.user);
@@ -43,14 +43,11 @@ const BoardScreen = () => {
       handleFetchBoard();
     }
   }, []);
+
   if (loading) return <AppLoader />;
   return (
     <>
-      <BoardTopBar
-        name={singleBoard?.name}
-        color={singleBoard?.color}
-        lastUpdated={lastUpdated?.toDate().toLocaleString()}
-      />
+      <BoardTopBar name={singleBoard?.name} color={singleBoard?.color} />
       <BoardInterface boardId={singleBoard?.id} boardData={boardDataList} />
     </>
   );

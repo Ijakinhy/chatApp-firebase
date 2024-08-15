@@ -19,25 +19,24 @@ import {
 import AppLoader from "../../components/layout/AppLoader";
 
 const AddTaskModal = ({ tabName, setAddTaskTo, taskTab }) => {
-  const [name, setName] = useState("");
+  const [text, setText] = useState("");
   const { currentUser } = useSelector((state) => state.user);
   const { loading, AreBoardDataFetched } = useSelector(
     (state) => state.boardData
   );
+
   const dispatch = useDispatch();
   const boardId = useParams();
-
-  useCallback(() => {
-    return dispatch(handleLastUpdated());
-  }, []);
-  const handleAddTask = () => {
+  const sleep = (ms = 1000) => new Promise((r) => setTimeout(r, ms));
+  const handleAddTask = async () => {
     try {
+      await sleep();
       dispatch(
         updateBoardData({
           uid: currentUser?.uid,
           boardId: boardId.boardId,
           tabName: taskTab,
-          text: name,
+          text: text,
         })
       );
 
@@ -48,7 +47,7 @@ const AddTaskModal = ({ tabName, setAddTaskTo, taskTab }) => {
       dispatch(fetchBoard({ uid: currentUser.uid, boardId: boardId.boardId }));
     }
   };
-  if (loading) return <AppLoader />;
+  // if (loading) return <AppLoader />;
 
   return (
     <Dialog open onClose={() => setAddTaskTo("")} fullWidth maxWidth="xs">
@@ -61,8 +60,8 @@ const AddTaskModal = ({ tabName, setAddTaskTo, taskTab }) => {
         </Stack>
         <OutlinedInput
           placeholder="add Task"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
         />
 
         <Button disabled={loading} onClick={handleAddTask} variant="contained">
