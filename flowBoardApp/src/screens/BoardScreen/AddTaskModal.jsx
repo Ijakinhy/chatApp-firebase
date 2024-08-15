@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
@@ -27,10 +27,11 @@ const AddTaskModal = ({ tabName, setAddTaskTo, taskTab }) => {
 
   const dispatch = useDispatch();
   const boardId = useParams();
-  const sleep = (ms = 1000) => new Promise((r) => setTimeout(r, ms));
+  // const sleep = (ms = 1000) => new Promise((r) => setTimeout(r, ms));
   const handleAddTask = async () => {
+    if (!text.trim()) return dispatch(showMessage("task should have name"));
     try {
-      await sleep();
+      // await sleep();
       dispatch(
         updateBoardData({
           uid: currentUser?.uid,
@@ -48,6 +49,8 @@ const AddTaskModal = ({ tabName, setAddTaskTo, taskTab }) => {
     }
   };
   // if (loading) return <AppLoader />;
+
+  const handleChange = useCallback((e) => setText(e.target.value), []);
 
   return (
     <Dialog open onClose={() => setAddTaskTo("")} fullWidth maxWidth="xs">
@@ -72,4 +75,4 @@ const AddTaskModal = ({ tabName, setAddTaskTo, taskTab }) => {
   );
 };
 
-export default AddTaskModal;
+export default memo(AddTaskModal);

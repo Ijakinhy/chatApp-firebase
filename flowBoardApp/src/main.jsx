@@ -10,7 +10,7 @@ import { store } from "./store.js";
 import ToastManager from "./components/layout/ToastManager.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  <>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
@@ -18,5 +18,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <App />
       </ThemeProvider>
     </Provider>
-  </React.StrictMode>
+  </>
 );

@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 
 import AddTaskModal from "./AddTaskModal";
 import BoardTab from "./BoardTab";
@@ -21,6 +21,10 @@ const BoardInterface = ({ boardData, boardId }) => {
     inProgress: "In Progress",
     completed: "Completed",
   };
+  const handleOpenAddTaskModal = useCallback(
+    (status) => setAddTaskTo(statusMap[status]),
+    []
+  );
 
   return (
     <>
@@ -42,7 +46,7 @@ const BoardInterface = ({ boardData, boardId }) => {
               tasks={tabs && tabs[lCase]}
               status={status}
               tabName={statusMap[status]}
-              addTask={() => setAddTaskTo(statusMap[status])}
+              handleOpenAddTaskModal={handleOpenAddTaskModal}
             />
           );
         })}
@@ -51,4 +55,4 @@ const BoardInterface = ({ boardData, boardId }) => {
   );
 };
 
-export default BoardInterface;
+export default memo(BoardInterface);
