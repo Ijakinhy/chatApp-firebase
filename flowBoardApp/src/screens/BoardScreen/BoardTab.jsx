@@ -20,7 +20,7 @@ const BoardTab = ({ tabName, addTask, tasks }) => {
           </IconButton>
         </Stack>
         <Stack spacing={2} mt={3}>
-          {tasks.map((task) => (
+          {tasks?.map((task) => (
             <Task key={task.id} text={task.text} id={task.id} />
           ))}
         </Stack>

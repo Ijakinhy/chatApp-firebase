@@ -27,18 +27,11 @@ const BoardScreen = () => {
     return data;
   }, [data]);
 
-  console.log(data);
+  // console.log(data);
 
   const handleFetchBoard = async () => {
     try {
-      const result = dispatch(
-        fetchBoard({ uid: currentUser.uid, boardId: singleBoard?.id })
-      );
-
-      // if (boardData) {
-      //   setData(boardData.tabs);
-      //   setLastUpdated(boardData?.lastUpdated.toDate().toLocaleString());
-      // }
+      dispatch(fetchBoard({ uid: currentUser.uid, boardId: singleBoard?.id }));
     } catch (error) {
       console.log(error.message);
     }
@@ -58,7 +51,7 @@ const BoardScreen = () => {
         color={singleBoard?.color}
         lastUpdated={lastUpdated?.toDate().toLocaleString()}
       />
-      <BoardInterface boardData={boardDataList} />
+      <BoardInterface boardId={singleBoard?.id} boardData={boardDataList} />
     </>
   );
 };

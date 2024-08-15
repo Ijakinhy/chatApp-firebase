@@ -1,6 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import {
+  arrayUnion,
+  doc,
+  FieldValue,
+  getDoc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
+import firebase from "firebase/compat/app";
 
 const initialState = {
   boardData: [],
@@ -29,10 +37,39 @@ export const fetchBoard = createAsyncThunk(
   }
 );
 
+/// update the board Data
+
+export const updateBoardData = createAsyncThunk(
+  "boardData/updateBoardData",
+  async (payload) => {
+    const { uid, boardId, tabName, text } = payload;
+    const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
+
+    try {
+      await updateDoc(docRef, {
+        lastUpdated: serverTimestamp(),
+        [`tabs.${tabName}`]: arrayUnion({
+          id: `${text}-${Date.now()}`,
+          text,
+        }),
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+);
+
 const boardDataSlice = createSlice({
   name: "boardData",
   initialState,
-  reducers: {},
+  reducers: {
+    handleLastUpdated: () => {
+      return {
+        ...state,
+        lastUpdated,
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchBoard.pending, (state) => {
@@ -44,14 +81,23 @@ const boardDataSlice = createSlice({
           boardData: action.payload,
           areBoardDataFetched: true,
           loading: false,
-          lastUpdated: action.payload?.lastUpdated,
+          lastUpdated: action.payload.lastUpdated,
           data: action.payload?.tabs,
         };
       })
       .addCase(fetchBoard.rejected, (state) => {
         return { ...state, loading: false, areBoardDataFetched: false };
+      })
+      .addCase(updateBoardData.pending, (state) => {
+        return { ...state, loading: true };
+      })
+      .addCase(updateBoardData.fulfilled, (state, action) => {
+        return { ...state, loading: false };
+      })
+      .addCase(updateBoardData.rejected, (state) => {
+        return { ...state, loading: false };
       });
   },
 });
-
+export const { handleLastUpdated } = boardDataSlice.actions;
 export default boardDataSlice.reducer;
