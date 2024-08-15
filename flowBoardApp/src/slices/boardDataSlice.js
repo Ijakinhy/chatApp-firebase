@@ -37,7 +37,7 @@ export const fetchBoard = createAsyncThunk(
   }
 );
 
-/// update the board Data
+// / update the board Data
 
 export const updateBoardData = createAsyncThunk(
   "boardData/updateBoardData",

@@ -3,7 +3,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import logoImg from "../../assets/logo.svg";
 import ImageEl from "../../components/utils/ImageEl";
@@ -21,8 +21,9 @@ const AuthScreen = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState(initForm);
-
   const btn = useRef();
+
+  const { boards } = useSelector((state) => state.boards);
   const authText = isLogin ? "Do not have account" : "Already  have account";
   const dispatch = useDispatch();
   const handleChange = (event) =>
@@ -62,7 +63,9 @@ const AuthScreen = () => {
       setIsLoading(false);
     }
   };
-
+  useEffect(() => {
+    console.log(boards);
+  }, []);
   return (
     <Container
       maxWidth="xs"

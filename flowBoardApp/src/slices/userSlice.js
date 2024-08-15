@@ -17,8 +17,9 @@ export const fetchUserInfo = createAsyncThunk(
       if (docSnap.exists()) {
         return docSnap.data();
       }
+      console.log(docSnap.data());
 
-      return docSnap.data();
+      return docSnap?.data();
     } catch (error) {
       console.log(error.message);
       // throw error;
