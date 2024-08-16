@@ -1,6 +1,3 @@
-import React, { memo, useCallback, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import {
   Button,
   Chip,
@@ -9,14 +6,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import React, { memo, useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import ModalHeader from "../../components/layout/ModalHeader";
 import { showMessage } from "../../slices/BoardsSlice";
-import {
-  fetchBoard,
-  handleLastUpdated,
-  updateBoardData,
-} from "../../slices/boardDataSlice";
-import AppLoader from "../../components/layout/AppLoader";
+import { updateBoardData } from "../../slices/boardDataSlice";
 
 const AddTaskModal = ({ tabName, setAddTaskTo, taskTab }) => {
   const [text, setText] = useState("");
@@ -31,7 +26,7 @@ const AddTaskModal = ({ tabName, setAddTaskTo, taskTab }) => {
   const handleAddTask = async () => {
     if (!text.trim()) return dispatch(showMessage("task should have name"));
     try {
-      // await sleep();
+      // await sleep();1
       dispatch(
         updateBoardData({
           uid: currentUser?.uid,
@@ -44,11 +39,8 @@ const AddTaskModal = ({ tabName, setAddTaskTo, taskTab }) => {
       dispatch(showMessage("new task added"));
     } catch (error) {
       dispatch(showMessage(error.message));
-    } finally {
-      dispatch(fetchBoard({ uid: currentUser.uid, boardId: boardId.boardId }));
     }
   };
-  // if (loading) return <AppLoader />;
 
   const handleChange = useCallback((e) => setText(e.target.value), []);
 

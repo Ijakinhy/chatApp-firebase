@@ -53,23 +53,30 @@ export const updateBoardData = createAsyncThunk(
           text,
         }),
       });
+
+      const docSnapshot = await getDoc(docRef);
+      if (docSnapshot.exists()) {
+        return docSnapshot.data();
+      } else {
+        throw new Error("Document does not exist");
+      }
     } catch (error) {
       console.log(error.message);
     }
   }
 );
-export const handleBoardDataUpdate = createAsyncThunk(
-  "addTask",
-  async (payload) => {
-    const { uid, boardId, tabs } = payload;
-    const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
-    try {
-      await updateDoc(docRef, { tabs, lastUpdated: serverTimestamp() });
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-);
+// export const handleBoardDataUpdate = createAsyncThunk(
+//   "addTask",
+//   async (payload) => {
+//     const { uid, boardId, tabs } = payload;
+//     const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
+//     try {
+//       await updateDoc(docRef, { tabs, lastUpdated: serverTimestamp() });
+//     } catch (error) {
+//       console.log(error.message);
+//     }
+//   }
+// );
 const boardDataSlice = createSlice({
   name: "boardData",
   initialState,
@@ -92,7 +99,8 @@ const boardDataSlice = createSlice({
           boardData: action.payload,
           areBoardDataFetched: true,
           loading: false,
-          lastUpdated: action.payload.lastUpdated,
+
+          lastUpdated: action.payload?.lastUpdated,
           data: action.payload?.tabs,
         };
       })
@@ -103,20 +111,27 @@ const boardDataSlice = createSlice({
         return { ...state, loading: true };
       })
       .addCase(updateBoardData.fulfilled, (state, action) => {
-        return { ...state, loading: false };
+        return {
+          ...state,
+          loading: false,
+          data: action.payload?.tabs,
+          boardData: action.payload,
+          areBoardDataFetched: false,
+          lastUpdated: action.payload?.lastUpdated,
+        };
       })
       .addCase(updateBoardData.rejected, (state) => {
         return { ...state, loading: false };
-      })
-      .addCase(handleBoardDataUpdate.pending, (state) => {
-        return { ...state, loading: true };
-      })
-      .addCase(handleBoardDataUpdate.fulfilled, (state, action) => {
-        return { ...state, loading: false };
-      })
-      .addCase(handleBoardDataUpdate.rejected, (state) => {
-        return { ...state, loading: false };
       });
+    // .addCase(handleBoardDataUpdate.pending, (state) => {
+    //   return { ...state, loading: true };
+    // })
+    // .addCase(handleBoardDataUpdate.fulfilled, (state, action) => {
+    //   return { ...state, loading: false };
+    // })
+    // .addCase(handleBoardDataUpdate.rejected, (state) => {
+    //   return { ...state, loading: false };
+    // });
   },
 });
 export const { handleLastUpdated } = boardDataSlice.actions;

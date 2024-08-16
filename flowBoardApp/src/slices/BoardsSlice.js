@@ -20,6 +20,7 @@ const initialState = {
   massage: "",
   boardData: [],
   areBoardDataFetch: false,
+  createdAt: null,
 };
 // create Board
 export const createBoard = createAsyncThunk(
@@ -28,7 +29,6 @@ export const createBoard = createAsyncThunk(
   async (payload) => {
     const { name, color, uid } = payload;
     const colRef = collection(db, `users/${uid}/boards`);
-
     try {
       const res = await addDoc(colRef, {
         id: `${name}-${Date.now()}`,
@@ -36,6 +36,13 @@ export const createBoard = createAsyncThunk(
         color,
         createdAt: new Date().toLocaleString("en-US"),
       });
+
+      const docRef = doc(db, `users/${uid}/boards/${res.id}`);
+      const docSnapshot = await getDoc(docRef);
+      if (docSnapshot.exists()) {
+        console.log(docSnapshot.data());
+        return docSnapshot.data();
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -107,11 +114,17 @@ export const boardListSlice = createSlice({
       .addCase(createBoard.pending, (state) => {
         return { ...state, loading: true };
       })
-      .addCase(createBoard.fulfilled, (state) => {
-        return { ...state, loading: false, massage: "New Board Created" };
+      .addCase(createBoard.fulfilled, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          massage: "New Board Created",
+          boards: [action.payload, ...state.boards],
+          createdAt: action.payload.createdAt,
+        };
       })
-      .addCase(createBoard.rejected, (state, action) => {
-        return { ...state, loading: false, message: action.error.message };
+      .addCase(createBoard.rejected, (state) => {
+        return { ...state, loading: false };
       });
   },
 });

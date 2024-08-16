@@ -1,7 +1,8 @@
 import { Delete } from "@mui/icons-material";
 import { IconButton, Stack, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
 
-const Task = ({ id, text }) => {
+const Task = ({ id, text, task, deleteTask }) => {
   return (
     <Stack direction="row" alignItems="center" spacing={1}>
       <Typography
@@ -14,7 +15,7 @@ const Task = ({ id, text }) => {
       >
         {text}
       </Typography>
-      <IconButton size="small">
+      <IconButton size="small" onClick={() => deleteTask(id)}>
         <Delete />
       </IconButton>
     </Stack>

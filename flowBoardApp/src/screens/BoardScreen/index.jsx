@@ -43,6 +43,7 @@ const BoardScreen = () => {
       handleFetchBoard();
     }
   }, []);
+  console.log(boardData);
 
   if (loading) return <AppLoader />;
   return (

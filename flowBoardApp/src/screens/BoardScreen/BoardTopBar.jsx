@@ -25,7 +25,7 @@ const BoardTopBar = ({ name, color }) => {
         </Stack>
         <Stack alignItems="center" direction="row" spacing={3}>
           <Typography variant="body2">
-            Last updated: {lastUpdated?.toDate().toLocaleString()}
+            Last updated: {lastUpdated?.toDate().toLocaleString("en-US")}
           </Typography>
           <IconButton size="small" x>
             <Delete />

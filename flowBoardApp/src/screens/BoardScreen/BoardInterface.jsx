@@ -3,7 +3,7 @@ import React, { memo, useCallback, useEffect, useState } from "react";
 
 import AddTaskModal from "./AddTaskModal";
 import BoardTab from "./BoardTab";
-import { fetchBoard, handleBoardDataUpdate } from "../../slices/boardDataSlice";
+import { fetchBoard } from "../../slices/boardDataSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 

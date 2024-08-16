@@ -6,30 +6,26 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ModalHeader from "../../components/layout/ModalHeader";
-import {
-  createBoard,
-  fetchBoards,
-  showMessage,
-} from "../../slices/BoardsSlice";
+import { createBoard, showMessage } from "../../slices/BoardsSlice";
 import { colors } from "../../theme";
 const CreateBoardMode = ({ closeModal }) => {
   const [name, setName] = useState("");
   const [color, setColor] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.boards);
 
+  const {
+    currentUser: { uid },
+  } = useSelector((state) => state.user);
   const handleCreateBoard = async () => {
-    const uid = getAuth().currentUser.uid;
-
     try {
       if (!name) {
         dispatch(showMessage("Board name is required"));
       } else {
-        setIsLoading(true);
         dispatch(createBoard({ name, color, uid }));
         closeModal();
         dispatch(showMessage("New Board created"));
@@ -37,10 +33,6 @@ const CreateBoardMode = ({ closeModal }) => {
     } catch (error) {
       console.log(error);
       dispatch(showMessage(error.message));
-      setIsLoading(false);
-    } finally {
-      dispatch(fetchBoards(uid));
-      setIsLoading(false);
     }
   };
   // if (isLoading) return <AppLoader />;
@@ -78,7 +70,7 @@ const CreateBoardMode = ({ closeModal }) => {
           onClick={() => handleCreateBoard()}
           variant="contained"
           size="large"
-          disabled={isLoading}
+          disabled={loading}
         >
           Create
         </Button>

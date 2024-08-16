@@ -6,14 +6,15 @@ import { colors } from "../../theme";
 import { useNavigate } from "react-router-dom";
 
 const BoardCard = () => {
-  const { boards } = useSelector((state) => state.boards);
+  const { boards, createdAt } = useSelector((state) => state.boards);
   const [loading, setLoading] = useState();
   const navigate = useNavigate();
+  console.log(createdAt);
 
   return (
     <>
       {boards?.map((board) => {
-        const formattedDate = new Date(board.createdAt).toLocaleDateString();
+        const formattedDate = new Date(board?.createdAt).toLocaleDateString();
         return (
           <Grid item xs={3} key={board.id}>
             <Stack
@@ -42,7 +43,7 @@ const BoardCard = () => {
                 </IconButton>
               </Stack>
               <Typography variant="caption">
-                {`Created At: ${formattedDate}
+                {`Created At: ${createdAt}
               `}
               </Typography>
             </Stack>
