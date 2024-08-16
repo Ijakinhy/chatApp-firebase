@@ -38,7 +38,7 @@ const AddTaskModal = ({ tabName, setAddTaskTo, taskTab }) => {
 
       dispatch(showMessage("new task added"));
     } catch (error) {
-      dispatch(showMessage(error.message));
+      dispatch(showMessage("error task not added"));
     }
   };
 

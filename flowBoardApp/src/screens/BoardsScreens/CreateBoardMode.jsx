@@ -14,7 +14,6 @@ import { colors } from "../../theme";
 const CreateBoardMode = ({ closeModal }) => {
   const [name, setName] = useState("");
   const [color, setColor] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.boards);
 
@@ -23,19 +22,19 @@ const CreateBoardMode = ({ closeModal }) => {
   } = useSelector((state) => state.user);
   const handleCreateBoard = async () => {
     try {
-      if (!name) {
+      if (!name.trim()) {
         dispatch(showMessage("Board name is required"));
       } else {
         dispatch(createBoard({ name, color, uid }));
-        closeModal();
         dispatch(showMessage("New Board created"));
+        closeModal();
       }
     } catch (error) {
-      console.log(error);
-      dispatch(showMessage(error.message));
+      dispatch(showMessage("error happens "));
+      throw error;
     }
   };
-  // if (isLoading) return <AppLoader />;
+  if (loading) return <AppLoader />;
 
   return (
     <Dialog open fullWidth maxWidth="xs">

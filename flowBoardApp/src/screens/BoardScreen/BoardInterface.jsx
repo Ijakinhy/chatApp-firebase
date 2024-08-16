@@ -1,60 +1,42 @@
 import { Grid } from "@mui/material";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useState } from "react";
 
-import AddTaskModal from "./AddTaskModal";
-import BoardTab from "./BoardTab";
-import { fetchBoard } from "../../slices/boardDataSlice";
+import { DragDropContext } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { DragDropContext } from "react-beautiful-dnd";
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+import AppLoader from "../../components/layout/AppLoader";
+import { handleDragEnd } from "../../slices/boardDataSlice";
+import { showMessage } from "../../slices/BoardsSlice";
+import AddTaskModal from "./AddTaskModal";
+import BoardTab from "./BoardTab";
 
-const BoardInterface = ({ boardData, boardId }) => {
+const BoardInterface = () => {
   const [addTaskTo, setAddTaskTo] = useState("");
-  const [tabs, setTabs] = useState(structuredClone(boardData));
-  console.log(tabs);
-
+  const { loading, data } = useSelector((state) => state.boardData);
+  const [tabs, setTabs] = useState(structuredClone(data));
+  const { boardId } = useParams();
   const {
     currentUser: { uid },
   } = useSelector((state) => state.user);
-  const { loading } = useSelector((state) => state.boardData);
   const dispatch = useDispatch();
+
   const statusMap = {
     toDos: "ToDos",
     inProgress: "In Progress",
     completed: "Completed",
   };
+
   const handleOpenAddTaskModal = useCallback(
     (status) => setAddTaskTo(statusMap[status]),
     []
   );
 
   const handleDnd = async ({ source, destination }) => {
-    console.log({ source, destination });
-    if (!destination) return;
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    )
-      return;
-
-    const dClone = structuredClone(tabs);
-    /// remove task from the source
-    const [draggedTask] = dClone[source.droppableId].splice(source.index, 1);
-    /// add the remove task to  the destination
-    dClone[destination.droppableId].splice(destination.index, 0, draggedTask);
-    console.log(dClone);
-    const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
-    await updateDoc(docRef, {
-      tabs: dClone,
-      lastUpdated: serverTimestamp(),
-    });
-
-    dispatch(fetchBoard({ uid, boardId }));
-
-    setTabs(dClone);
+    dispatch(handleDragEnd({ source, destination, uid, boardId, data }));
+    dispatch(showMessage("board Updated"));
   };
+
+  if (loading) return <AppLoader />;
 
   return (
     <>

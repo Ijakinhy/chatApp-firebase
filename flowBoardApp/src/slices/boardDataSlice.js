@@ -2,13 +2,11 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   arrayUnion,
   doc,
-  FieldValue,
   getDoc,
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import firebase from "firebase/compat/app";
 
 const initialState = {
   boardData: [],
@@ -16,6 +14,7 @@ const initialState = {
   lastUpdated: null,
   loading: true,
   data: null,
+  massage: "",
 };
 // fetching the board Data
 export const fetchBoard = createAsyncThunk(
@@ -36,12 +35,6 @@ export const fetchBoard = createAsyncThunk(
     }
   }
 );
-
-// delete task
-
-// export const handleDeleteTask  =  createAsyncThunk('boardData/deleteTask', async(payload)=>{
-//   const {taskId,data,boardId,uid,} =  payload
-// })
 
 export const updateBoardData = createAsyncThunk(
   "boardData/updateBoardData",
@@ -69,18 +62,69 @@ export const updateBoardData = createAsyncThunk(
     }
   }
 );
-// export const handleBoardDataUpdate = createAsyncThunk(
-//   "addTask",
-//   async (payload) => {
-//     const { uid, boardId, tabs } = payload;
-//     const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
-//     try {
-//       await updateDoc(docRef, { tabs, lastUpdated: serverTimestamp() });
-//     } catch (error) {
-//       console.log(error.message);
-//     }
-//   }
-// );
+
+// delete task
+
+export const handleDeleteTask = createAsyncThunk(
+  "boardData/deleteTask",
+  async (payload) => {
+    const { id, data, boardId, uid, status } = payload;
+    const dClone = structuredClone(data);
+    try {
+      const taskIndex = dClone[status].findIndex((tb) => tb.id === id);
+
+      dClone[status].splice(taskIndex, 1);
+
+      const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
+      await updateDoc(docRef, {
+        tabs: dClone,
+        lastUpdated: serverTimestamp(),
+      });
+
+      const docSnapshot = await getDoc(docRef);
+
+      if (docSnapshot.exists()) {
+        return docSnapshot.data();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+///  drag and drop
+export const handleDragEnd = createAsyncThunk(
+  "boardData/handleDragEnd",
+  async (payload) => {
+    const { source, destination, uid, boardId, data } = payload;
+    try {
+      if (!destination) return;
+      if (
+        source.droppableId === destination.droppableId &&
+        source.index === destination.index
+      )
+        return;
+      const dClone = structuredClone(data);
+      /// remove task from the source
+      const [draggedTask] = dClone[source.droppableId].splice(source.index, 1);
+      /// add the remove task to  the destination
+      dClone[destination.droppableId].splice(destination.index, 0, draggedTask);
+
+      const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
+      await updateDoc(docRef, {
+        tabs: dClone,
+        lastUpdated: serverTimestamp(),
+      });
+      const docSnapshot = await getDoc(docRef);
+      if (docSnapshot.exists()) {
+        return docSnapshot.data();
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+);
+
+// slice
 const boardDataSlice = createSlice({
   name: "boardData",
   initialState,
@@ -126,16 +170,36 @@ const boardDataSlice = createSlice({
       })
       .addCase(updateBoardData.rejected, (state) => {
         return { ...state, loading: false };
+      })
+      .addCase(handleDeleteTask.pending, (state) => {
+        return { ...state, loading: true };
+      })
+      .addCase(handleDeleteTask.fulfilled, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          data: action.payload.tabs,
+          lastUpdated: action.payload?.lastUpdated,
+        };
+      })
+      .addCase(handleDeleteTask.rejected, (state) => {
+        return { ...state, loading: false };
+      })
+      .addCase(handleDragEnd.pending, (state) => {
+        return { ...state, loading: true };
+      })
+      .addCase(handleDragEnd.fulfilled, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          data: action.payload.tabs,
+          lastUpdated: action.payload?.lastUpdated,
+          message: "board updated",
+        };
+      })
+      .addCase(handleDragEnd.rejected, (state) => {
+        return { ...state, loading: false };
       });
-    // .addCase(handleBoardDataUpdate.pending, (state) => {
-    //   return { ...state, loading: true };
-    // })
-    // .addCase(handleBoardDataUpdate.fulfilled, (state, action) => {
-    //   return { ...state, loading: false };
-    // })
-    // .addCase(handleBoardDataUpdate.rejected, (state) => {
-    //   return { ...state, loading: false };
-    // });
   },
 });
 export const { handleLastUpdated } = boardDataSlice.actions;

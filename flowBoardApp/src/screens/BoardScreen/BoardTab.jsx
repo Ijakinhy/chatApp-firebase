@@ -1,48 +1,14 @@
 import { AddCircleOutline } from "@mui/icons-material";
 import { Grid, IconButton, Stack, Typography } from "@mui/material";
-import React, { memo, useCallback, useState } from "react";
-import Task from "./Task";
-import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase";
-import { fetchBoard } from "../../slices/boardDataSlice";
-import { Droppable } from "react-beautiful-dnd";
+import React from "react";
 import StrictModeDroppable from "../../components/utils/StrictModeDroppable";
+import Task from "./Task";
 
 const BoardTab = ({ tabName, handleOpenAddTaskModal, tasks, status }) => {
-  console.log("tab", tabName);
-  const { boardId } = useParams();
-  const statusLCase = status.toLowerCase();
-  const tbName = tabName.toLowerCase().replace(/\s+/g, "");
-  const { data } = useSelector((state) => state.boardData);
-  const dispatch = useDispatch();
-  const [data1, setData1] = useState(data);
+  // console.log(status);
 
-  const {
-    currentUser: { uid },
-  } = useSelector((state) => state.user);
+  // console.log("tab", tabName);
 
-  const handleDeleteTask = useCallback(
-    async (id) => {
-      const dClone = structuredClone(data1);
-      const taskIndex = dClone[statusLCase].findIndex((tb) => tb.id === id);
-      console.log(dClone[tbName]);
-
-      dClone[statusLCase].splice(taskIndex, 1);
-
-      const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
-      await updateDoc(docRef, {
-        tabs: dClone,
-        lastUpdated: serverTimestamp(),
-      });
-
-      dispatch(fetchBoard({ uid, boardId }));
-
-      setData1(dClone);
-    },
-    [data1]
-  );
   return (
     <StrictModeDroppable droppableId={status.toLowerCase()}>
       {(provided) => (
@@ -66,11 +32,11 @@ const BoardTab = ({ tabName, handleOpenAddTaskModal, tasks, status }) => {
             <Stack spacing={2} mt={3}>
               {tasks?.map((task, index) => (
                 <Task
-                  deleteTask={handleDeleteTask}
                   key={task.id}
                   text={task.text}
                   id={task.id}
                   index={index}
+                  status={status.toLowerCase()}
                 />
               ))}
             </Stack>
@@ -82,4 +48,4 @@ const BoardTab = ({ tabName, handleOpenAddTaskModal, tasks, status }) => {
   );
 };
 
-export default memo(BoardTab);
+export default BoardTab;
