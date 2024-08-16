@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { fetchBoard } from "../../slices/boardDataSlice";
+import { Droppable } from "react-beautiful-dnd";
+import StrictModeDroppable from "../../components/utils/StrictModeDroppable";
 
 const BoardTab = ({ tabName, handleOpenAddTaskModal, tasks, status }) => {
   console.log("tab", tabName);
@@ -42,35 +44,41 @@ const BoardTab = ({ tabName, handleOpenAddTaskModal, tasks, status }) => {
     [data1]
   );
   return (
-    <Grid item xs={4}>
-      <Stack p={3} bgcolor="#000">
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <Typography variant="h6" fontWeight="400">
-            {tabName}
-          </Typography>
-          <IconButton
-            onClick={() => handleOpenAddTaskModal(status)}
-            size="small"
-          >
-            <AddCircleOutline fontSize="small" />
-          </IconButton>
-        </Stack>
-        <Stack spacing={2} mt={3}>
-          {tasks?.map((task) => (
-            <Task
-              deleteTask={handleDeleteTask}
-              key={task.id}
-              text={task.text}
-              id={task.id}
-            />
-          ))}
-        </Stack>
-      </Stack>
-    </Grid>
+    <StrictModeDroppable droppableId={status.toLowerCase()}>
+      {(provided) => (
+        <Grid item xs={4} {...provided.droppableProps} ref={provided.innerRef}>
+          <Stack p={3} bgcolor="#000">
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Typography variant="h6" fontWeight="400">
+                {tabName}
+              </Typography>
+              <IconButton
+                onClick={() => handleOpenAddTaskModal(status)}
+                size="small"
+              >
+                <AddCircleOutline fontSize="small" />
+              </IconButton>
+            </Stack>
+            <Stack spacing={2} mt={3}>
+              {tasks?.map((task, index) => (
+                <Task
+                  deleteTask={handleDeleteTask}
+                  key={task.id}
+                  text={task.text}
+                  id={task.id}
+                  index={index}
+                />
+              ))}
+            </Stack>
+            {provided.placeholder}
+          </Stack>
+        </Grid>
+      )}
+    </StrictModeDroppable>
   );
 };
 
