@@ -37,7 +37,11 @@ export const fetchBoard = createAsyncThunk(
   }
 );
 
-// / update the board Data
+// delete task
+
+// export const handleDeleteTask  =  createAsyncThunk('boardData/deleteTask', async(payload)=>{
+//   const {taskId,data,boardId,uid,} =  payload
+// })
 
 export const updateBoardData = createAsyncThunk(
   "boardData/updateBoardData",

@@ -6,10 +6,9 @@ import { colors } from "../../theme";
 import { useNavigate } from "react-router-dom";
 
 const BoardCard = () => {
-  const { boards, createdAt } = useSelector((state) => state.boards);
+  const { boards } = useSelector((state) => state.boards);
   const [loading, setLoading] = useState();
   const navigate = useNavigate();
-  console.log(createdAt);
 
   return (
     <>
@@ -43,7 +42,7 @@ const BoardCard = () => {
                 </IconButton>
               </Stack>
               <Typography variant="caption">
-                {`Created At: ${createdAt}
+                {`Created At: ${board.createdAt}
               `}
               </Typography>
             </Stack>

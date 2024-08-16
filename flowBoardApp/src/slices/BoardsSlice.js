@@ -20,7 +20,7 @@ const initialState = {
   massage: "",
   boardData: [],
   areBoardDataFetch: false,
-  createdAt: null,
+  // createdAt: null,
 };
 // create Board
 export const createBoard = createAsyncThunk(
@@ -40,7 +40,6 @@ export const createBoard = createAsyncThunk(
       const docRef = doc(db, `users/${uid}/boards/${res.id}`);
       const docSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
-        console.log(docSnapshot.data());
         return docSnapshot.data();
       }
     } catch (error) {
@@ -120,7 +119,6 @@ export const boardListSlice = createSlice({
           loading: false,
           massage: "New Board Created",
           boards: [action.payload, ...state.boards],
-          createdAt: action.payload.createdAt,
         };
       })
       .addCase(createBoard.rejected, (state) => {

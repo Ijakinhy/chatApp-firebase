@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import logoImg from "../../assets/logo.svg";
 import ImageEl from "../../components/utils/ImageEl";
 import { auth, db } from "../../firebase";
-import { showMessage } from "../../slices/BoardsSlice";
+import { fetchBoards, showMessage } from "../../slices/BoardsSlice";
 import FormEl from "../../components/utils/FormEl";
 import { collection, doc, setDoc } from "firebase/firestore";
 const initForm = {
@@ -24,6 +24,7 @@ const AuthScreen = () => {
   const btn = useRef();
 
   const { boards } = useSelector((state) => state.boards);
+  const { currentUser, isLoggedIn } = useSelector((state) => state.user);
   const authText = isLogin ? "Do not have account" : "Already  have account";
   const dispatch = useDispatch();
   const handleChange = (event) =>
@@ -51,7 +52,6 @@ const AuthScreen = () => {
         // });
       } else if (btn.current.name === "login") {
         const res = await signInWithEmailAndPassword(auth, email, password);
-        // console.log("id res", res.user.uid);
 
         dispatch(fetchBoards(res.user.uid));
       }
@@ -64,7 +64,7 @@ const AuthScreen = () => {
     }
   };
   useEffect(() => {
-    console.log(boards);
+    if (isLoggedIn) dispatch(fetchBoards(currentUser?.uid));
   }, []);
   return (
     <Container
