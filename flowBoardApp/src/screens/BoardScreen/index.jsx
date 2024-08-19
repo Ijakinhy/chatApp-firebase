@@ -27,8 +27,6 @@ const BoardScreen = () => {
     return data;
   }, [data]);
 
-  // console.log(data);
-
   const handleFetchBoard = async () => {
     try {
       dispatch(fetchBoard({ uid: currentUser.uid, boardId: singleBoard?.id }));

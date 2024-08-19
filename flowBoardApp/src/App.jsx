@@ -1,7 +1,7 @@
 import { onAuthStateChanged } from "firebase/auth";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./components/utils/PrivateRoute";
 import PublicOnlyRoute from "./components/utils/PublicOnlyRoute";
 import { auth } from "./firebase";
@@ -47,6 +47,7 @@ export default function App() {
             path="/:boardId"
             element={<PrivateRoute Component={BoardScreen} />}
           />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </div>

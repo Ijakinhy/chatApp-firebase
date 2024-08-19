@@ -3,6 +3,7 @@ import {
   addDoc,
   arrayUnion,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -40,7 +41,7 @@ export const createBoard = createAsyncThunk(
       const docRef = doc(db, `users/${uid}/boards/${res.id}`);
       const docSnapshot = await getDoc(docRef);
       if (docSnapshot.exists()) {
-        return docSnapshot.data();
+        return { ...docSnapshot.data(), id: res.id };
       }
     } catch (error) {
       console.log(error.message);
@@ -79,7 +80,25 @@ export const fetchBoards = createAsyncThunk(
   }
 );
 
-// fetch  Board Data
+// delete board
+
+export const deleteBoard = createAsyncThunk(
+  "boards/deleteBoard",
+  async (payload) => {
+    try {
+      const { boardId, boards, uid } = payload;
+      const boardRef = doc(db, `users/${uid}/boards/${boardId}`);
+
+      await deleteDoc(boardRef);
+      const newBoards = boards.filter((board) => board.id !== boardId);
+
+      return newBoards;
+    } catch (error) {
+      console.log(error.message);
+      throw error;
+    }
+  }
+);
 
 // boardListSlice
 export const boardListSlice = createSlice({
@@ -122,6 +141,15 @@ export const boardListSlice = createSlice({
         };
       })
       .addCase(createBoard.rejected, (state) => {
+        return { ...state, loading: false };
+      })
+      .addCase(deleteBoard.pending, (state) => {
+        return { ...state, loading: true };
+      })
+      .addCase(deleteBoard.fulfilled, (state, action) => {
+        return { ...state, loading: false, boards: action.payload };
+      })
+      .addCase(deleteBoard.rejected, (state) => {
         return { ...state, loading: false };
       });
   },
