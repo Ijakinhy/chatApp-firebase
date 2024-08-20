@@ -4,6 +4,7 @@ import ImageEl from "../../components/utils/ImageEl";
 import logoImg from "../../assets/logo.svg";
 import LogoutIcon from "@mui/icons-material/ExitToApp";
 import { auth } from "../../firebase";
+import { AddCircleOutline } from "@mui/icons-material";
 const TopBar = ({ openModal }) => {
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   return (
@@ -22,14 +23,14 @@ const TopBar = ({ openModal }) => {
         />
         <Stack direction="row" spacing={2}>
           <Button variant={isXs || "contained"} onClick={openModal}>
-            Create Board
+            {isXs ? <AddCircleOutline /> : "Create Board"}
           </Button>
           <Button
             startIcon={<LogoutIcon />}
             onClick={() => auth.signOut()}
             color="inherit"
           >
-            {isXs || "Logout"}
+            {isXs ? "" : "Logout"}
           </Button>
         </Stack>
       </Toolbar>

@@ -1,5 +1,12 @@
 import { ArrowBack, Delete } from "@mui/icons-material";
-import { AppBar, IconButton, Stack, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  IconButton,
+  Stack,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { colors } from "../../theme";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -15,6 +22,7 @@ const BoardTopBar = ({ name, color }) => {
   const { lastUpdated } = useSelector((state) => state.boardData);
   const { boardId } = useParams();
   const dispatch = useDispatch();
+  const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
 
   const handleDeleteBoard = () => {
     if (confirm("Are you sure you want to delete this board")) {
@@ -41,8 +49,19 @@ const BoardTopBar = ({ name, color }) => {
           </Typography>
         </Stack>
         <Stack alignItems="center" direction="row" spacing={3}>
-          <Typography variant="body2">
-            Last updated: {lastUpdated?.toDate().toLocaleString("en-US")}
+          <Typography
+            display={{
+              // xs: "none",
+              sm: "block",
+              md: "block",
+            }}
+            variant="body2"
+          >
+            {isXs
+              ? `Last updated: ${lastUpdated?.toDate().toLocaleDateString()}`
+              : `Last updated: ${lastUpdated
+                  ?.toDate()
+                  .toLocaleString("en-US")}`}
           </Typography>
           <IconButton size="small" onClick={handleDeleteBoard}>
             <Delete />
