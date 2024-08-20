@@ -12,8 +12,22 @@ const BoardTab = ({ tabName, handleOpenAddTaskModal, tasks, status }) => {
   return (
     <StrictModeDroppable droppableId={status.toLowerCase()}>
       {(provided) => (
-        <Grid item xs={4} {...provided.droppableProps} ref={provided.innerRef}>
-          <Stack p={3} bgcolor="#000">
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={4}
+          {...provided.droppableProps}
+          ref={provided.innerRef}
+        >
+          <Stack
+            p={{
+              xs: 1.2,
+              sm: 1.6,
+              md: 2.5,
+            }}
+            bgcolor="#000"
+          >
             <Stack
               direction="row"
               justifyContent="space-between"

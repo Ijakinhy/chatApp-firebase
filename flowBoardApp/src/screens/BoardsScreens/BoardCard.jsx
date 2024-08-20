@@ -15,7 +15,7 @@ const BoardCard = () => {
       {boards?.map((board) => {
         const formattedDate = new Date(board?.createdAt).toLocaleDateString();
         return (
-          <Grid item xs={3} key={board.id}>
+          <Grid item xs={12} sm={4} md={3} key={board.id}>
             <Stack
               p={2}
               bgcolor="background.paper"
