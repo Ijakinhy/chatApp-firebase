@@ -1,10 +1,11 @@
-import { AppBar, Button, Stack, Toolbar } from "@mui/material";
+import { AppBar, Button, Stack, Toolbar, useMediaQuery } from "@mui/material";
 import React from "react";
 import ImageEl from "../../components/utils/ImageEl";
 import logoImg from "../../assets/logo.svg";
 import LogoutIcon from "@mui/icons-material/ExitToApp";
 import { auth } from "../../firebase";
 const TopBar = ({ openModal }) => {
+  const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   return (
     <AppBar position="static">
       <Toolbar
@@ -20,7 +21,7 @@ const TopBar = ({ openModal }) => {
           alt="logo"
         />
         <Stack direction="row" spacing={2}>
-          <Button variant="contained" onClick={openModal}>
+          <Button variant={isXs || "contained"} onClick={openModal}>
             Create Board
           </Button>
           <Button
@@ -28,7 +29,7 @@ const TopBar = ({ openModal }) => {
             onClick={() => auth.signOut()}
             color="inherit"
           >
-            Logout
+            {isXs || "Logout"}
           </Button>
         </Stack>
       </Toolbar>

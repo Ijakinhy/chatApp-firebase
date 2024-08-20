@@ -8,7 +8,7 @@ import { handleDeleteTask } from "../../slices/boardDataSlice";
 import { useCallback } from "react";
 import { showMessage } from "../../slices/BoardsSlice";
 
-const Task = ({ index, id, text, task, status }) => {
+const Task = ({ index, id, text, task, status, onClick }) => {
   const { currentUser } = useSelector((state) => state.user);
   const { data } = useSelector((state) => state.boardData);
   const { boardId } = useParams();
@@ -39,6 +39,7 @@ const Task = ({ index, id, text, task, status }) => {
               p: 1,
               width: "100%",
             }}
+            onClick={onClick}
           >
             {text}
           </Typography>

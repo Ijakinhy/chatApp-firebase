@@ -123,6 +123,39 @@ export const handleDragEnd = createAsyncThunk(
     }
   }
 );
+/// shift task
+export const shiftTask = createAsyncThunk(
+  "boardData/shiftTask",
+  async (payload) => {
+    const { status, task, uid, boardId, data } = payload;
+    try {
+      if (task.status === status) return;
+
+      const dClone = structuredClone(data);
+
+      // / remove task from the source
+      const [taskShifted] = dClone[task.status.toLowerCase()].splice(
+        task.index,
+        1
+      );
+
+      // // /// add the remove task to  the destination
+      dClone[status].unshift(taskShifted);
+
+      const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
+      await updateDoc(docRef, {
+        tabs: dClone,
+        lastUpdated: serverTimestamp(),
+      });
+      const docSnapshot = await getDoc(docRef);
+      if (docSnapshot.exists()) {
+        return docSnapshot.data();
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+);
 
 // slice
 const boardDataSlice = createSlice({
@@ -192,12 +225,29 @@ const boardDataSlice = createSlice({
         return {
           ...state,
           loading: false,
-          data: action.payload.tabs,
+          data: action.payload?.tabs,
           lastUpdated: action.payload?.lastUpdated,
           message: "board updated",
         };
       })
       .addCase(handleDragEnd.rejected, (state) => {
+        return { ...state, loading: false };
+      })
+      .addCase(shiftTask.pending, (state) => {
+        return { ...state, loading: true };
+      })
+      .addCase(shiftTask.fulfilled, (state, action) => {
+        console.log(action);
+
+        return {
+          ...state,
+          loading: false,
+          data: action.payload?.tabs,
+          lastUpdated: action.payload?.lastUpdated,
+          message: "board updated",
+        };
+      })
+      .addCase(shiftTask.rejected, (state) => {
         return { ...state, loading: false };
       });
   },

@@ -1,13 +1,19 @@
 import { AddCircleOutline } from "@mui/icons-material";
 import { Grid, IconButton, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { memo } from "react";
 import StrictModeDroppable from "../../components/utils/StrictModeDroppable";
 import Task from "./Task";
 
-const BoardTab = ({ tabName, handleOpenAddTaskModal, tasks, status }) => {
+const BoardTab = ({
+  tabName,
+  handleOpenAddTaskModal,
+  tasks,
+  status,
+  openShiftTask,
+}) => {
   // console.log(status);
 
-  // console.log("tab", tabName);
+  // console.log({ tabName });
 
   return (
     <StrictModeDroppable droppableId={status.toLowerCase()}>
@@ -51,6 +57,9 @@ const BoardTab = ({ tabName, handleOpenAddTaskModal, tasks, status }) => {
                   id={task.id}
                   index={index}
                   status={status.toLowerCase()}
+                  onClick={() =>
+                    openShiftTask({ text: task.text, status, index })
+                  }
                 />
               ))}
             </Stack>
@@ -62,4 +71,4 @@ const BoardTab = ({ tabName, handleOpenAddTaskModal, tasks, status }) => {
   );
 };
 
-export default BoardTab;
+export default memo(BoardTab);

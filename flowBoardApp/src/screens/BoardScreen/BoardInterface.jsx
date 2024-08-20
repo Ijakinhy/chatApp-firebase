@@ -9,9 +9,11 @@ import { handleDragEnd } from "../../slices/boardDataSlice";
 import { showMessage } from "../../slices/BoardsSlice";
 import AddTaskModal from "./AddTaskModal";
 import BoardTab from "./BoardTab";
+import ShiftTaskModal from "./ShiftTaskModal";
 
 const BoardInterface = () => {
   const [addTaskTo, setAddTaskTo] = useState("");
+  const [shiftTaskTo, setShiftTaskTo] = useState(null);
   const { loading, data } = useSelector((state) => state.boardData);
   const [tabs, setTabs] = useState(structuredClone(data));
   const { boardId } = useParams();
@@ -31,6 +33,11 @@ const BoardInterface = () => {
     []
   );
 
+  const handleOpenShiftTaskModal = useCallback(
+    (task) => setShiftTaskTo(task),
+    []
+  );
+
   const handleDnd = async ({ source, destination }) => {
     dispatch(handleDragEnd({ source, destination, uid, boardId, data }));
     dispatch(showMessage("board Updated"));
@@ -40,6 +47,13 @@ const BoardInterface = () => {
 
   return (
     <>
+      {!!shiftTaskTo && (
+        <ShiftTaskModal
+          task={shiftTaskTo}
+          statusList={Object.keys[statusMap]}
+          close={() => handleOpenShiftTaskModal(!shiftTaskTo)}
+        />
+      )}
       {!!addTaskTo && (
         <AddTaskModal
           boardId={boardId}
@@ -60,6 +74,7 @@ const BoardInterface = () => {
                 status={status}
                 tabName={statusMap[status]}
                 handleOpenAddTaskModal={handleOpenAddTaskModal}
+                openShiftTask={handleOpenShiftTaskModal}
               />
             );
           })}
