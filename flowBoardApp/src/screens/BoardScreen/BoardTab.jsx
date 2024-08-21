@@ -1,5 +1,11 @@
 import { AddCircleOutline } from "@mui/icons-material";
-import { Grid, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import React, { memo } from "react";
 import StrictModeDroppable from "../../components/utils/StrictModeDroppable";
 import Task from "./Task";
@@ -11,9 +17,7 @@ const BoardTab = ({
   status,
   openShiftTask,
 }) => {
-  // console.log(status);
-
-  // console.log({ tabName });
+  const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
 
   return (
     <StrictModeDroppable droppableId={status.toLowerCase()}>
@@ -57,8 +61,10 @@ const BoardTab = ({
                   id={task.id}
                   index={index}
                   status={status.toLowerCase()}
-                  onClick={() =>
-                    openShiftTask({ text: task.text, status, index })
+                  onClick={
+                    isXs
+                      ? () => openShiftTask({ text: task.text, status, index })
+                      : null
                   }
                 />
               ))}

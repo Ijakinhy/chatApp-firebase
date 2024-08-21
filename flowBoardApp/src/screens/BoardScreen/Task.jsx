@@ -39,7 +39,7 @@ const Task = ({ index, id, text, task, status, onClick }) => {
               p: 1,
               width: "100%",
             }}
-            onClick={onClick}
+            {...(!!onClick ? { onClick: onClick } : {})}
           >
             {text}
           </Typography>
