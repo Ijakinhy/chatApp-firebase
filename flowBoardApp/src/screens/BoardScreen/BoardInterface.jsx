@@ -32,7 +32,6 @@ const BoardInterface = () => {
     (status) => setAddTaskTo(statusMap[status]),
     []
   );
-  console.log(tabs);
 
   const handleOpenShiftTaskModal = useCallback(
     (task) => setShiftTaskTo(task),
@@ -41,8 +40,6 @@ const BoardInterface = () => {
 
   const handleDnd = async ({ source, destination }) => {
     if (!destination) {
-      console.log("problem");
-
       return;
     } else if (
       source.droppableId === destination.droppableId &&
