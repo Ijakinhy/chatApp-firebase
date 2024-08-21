@@ -97,16 +97,22 @@ export const handleDragEnd = createAsyncThunk(
   async (payload) => {
     const { source, destination, uid, boardId, data } = payload;
     try {
-      if (!destination) return;
-      if (
-        source.droppableId === destination.droppableId &&
-        source.index === destination.index
-      )
-        return;
+      // if (!destination) {
+      //   console.log("problem");
+
+      //   return data;
+      // } else if (
+      //   source.droppableId === destination.droppableId &&
+      //   source.index === destination.index
+      // ) {
+      //   return data;
+      // } else {
       const dClone = structuredClone(data);
       /// remove task from the source
       const [draggedTask] = dClone[source.droppableId].splice(source.index, 1);
       /// add the remove task to  the destination
+      console.log("running");
+
       dClone[destination.droppableId].splice(destination.index, 0, draggedTask);
 
       const docRef = doc(db, `users/${uid}/boardsData/${boardId}`);
@@ -222,6 +228,8 @@ const boardDataSlice = createSlice({
         return { ...state, loading: true };
       })
       .addCase(handleDragEnd.fulfilled, (state, action) => {
+        console.log(action.payload);
+
         return {
           ...state,
           loading: false,
