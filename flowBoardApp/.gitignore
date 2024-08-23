@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# firebase exports 
+
+*firebase-export*/
+firebase-export-1723592584050klvrWN
+firebase-export-17232514119702bpSfx/
+firebase-export-17235925843462dp5Rq/
