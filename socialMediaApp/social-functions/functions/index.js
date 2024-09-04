@@ -1,7 +1,8 @@
 const express = require("express");
 const functions = require("firebase-functions");
 const { getAllScreams, postOneScream } = require("./handlers/screams");
-const { signup } = require("./handlers/user");
+const { signup, uploadImage, login } = require("./handlers/user");
+const fbAuth = require("./utils/fbAuth");
 
 const app = express();
 
@@ -22,45 +23,11 @@ const app = express();
 //     return false;
 //   }
 // };
-
+// screams
 app.get("/screams", getAllScreams);
-
-//   let idToken;
-//   if (
-//     req.headers.authorization &&
-//     req.headers.authorization.startsWith("Bearer ")
-//   ) {
-//     idToken = req.headers.authorization.split("Bearer ")[1];
-//   } else {
-//     console.error("no token found");
-
-//     return res.status(403).json({ error: "Unauthorized" });
-//   }
-
-//   admin
-//     .auth()
-//     .verifyIdToken(idToken)
-//     .then((decodedToken) => {
-//       req.user = decodedToken;
-//       console.log(decodedToken);
-//       return db
-//         .collection("users")
-//         .where("userId", "==", req.user.uid)
-//         .limit(1)
-//         .get();
-//     })
-//     .then((data) => {
-//       req.user.handle = data.docs[0].data().userHandle;
-//       return next();
-//     })
-//     .catch((error) => {
-//       console.error("error while verifying token", error);
-//       return res.status(403).json({ error: "unauthorized" });
-//     });
-// };
-
-app.post("/scream", postOneScream);
-
+app.post("/scream", fbAuth, postOneScream);
+// ///user
 app.post("/signup", signup);
+app.post("/user/image", fbAuth, uploadImage);
 
 exports.api = functions.https.onRequest(app);

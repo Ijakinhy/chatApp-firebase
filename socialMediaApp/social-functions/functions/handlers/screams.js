@@ -20,7 +20,7 @@ exports.getAllScreams = (req, res) => {
 };
 
 exports.postOneScream = (req, res) => {
-  console.log(req);
+  // console.log(req);
 
   if (req.method !== "POST") {
     return res.status(400).json({ error: "Method not allowed" });
@@ -28,7 +28,7 @@ exports.postOneScream = (req, res) => {
 
   const newScream = {
     body: req.body.body,
-    userHandle: req.body.userHandle,
+    userHandle: req.user.handle,
     createdAt: new Date().toISOString(),
   };
   db.collection("screams")
