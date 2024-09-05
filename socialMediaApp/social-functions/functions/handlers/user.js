@@ -1,6 +1,9 @@
 const { allowedNodeEnvironmentFlags } = require("process");
 const { db, admin } = require("../utils/admin");
-const { validateSignupData } = require("../utils/validators");
+const {
+  validateSignupData,
+  reduceUserDetails,
+} = require("../utils/validators");
 const { firebaseConfig } = require("../utils/config");
 const { log } = require("console");
 
@@ -43,6 +46,46 @@ exports.signup = async (req, res) => {
   }
 };
 
+// add user details
+
+exports.addUserDetails = async (req, res) => {
+  try {
+    const userDetails = reduceUserDetails(req.body);
+    await db.doc(`/users/${req.user.handle}`).update(userDetails);
+    return res.status(201).json({ message: "details added successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+/// get own user credentials
+exports.getAuthenticatedUser = async (req, res) => {
+  const userData = {};
+
+  try {
+    const userRef = await db.doc(`/users/${req.user.handle}`).get();
+    if (userRef.exists) {
+      userData.credentials = userRef.data();
+    }
+    userData.likes = [];
+    const likeRef = await db
+      .collection("likes")
+      .where("userHandle", "==", req.user.handle)
+      .get();
+    if (likeRef.exists) {
+      likeRef.forEach((doc) => {
+        userData.likes.push(doc.data());
+      });
+    }
+
+    return res.json(userData);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+// upload user profile image
 exports.uploadImage = (req, res) => {
   const busboy = require("busboy");
   const path = require("path");
@@ -54,6 +97,9 @@ exports.uploadImage = (req, res) => {
   let imageExtension;
   bb.on("file", (name, file, info) => {
     const { filename, encoding, mimeType } = info;
+    if (mimeType !== "image/jpeg" || mimeType !== "image/png") {
+      return res.status(400).json({ error: "wrong image type submitted" });
+    }
     imageExtension = filename.split(".").pop();
     imageFileName = `${Math.round(
       Math.random() * 1000000000
