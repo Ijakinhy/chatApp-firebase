@@ -39,6 +39,7 @@ module.exports = async (req, res, next) => {
       .limit(1)
       .get();
     req.user.handle = userDoc.docs[0].data().handle;
+    req.user.imageUrl = userDoc.docs[0].data().imageUrl;
 
     return next();
   } catch (error) {

@@ -4,6 +4,9 @@ const {
   getAllScreams,
   postOneScream,
   getScream,
+  commentOnScream,
+  likeScream,
+  unlikeScream,
 } = require("./handlers/screams");
 const {
   signup,
@@ -36,7 +39,10 @@ const app = express();
 // screams
 app.get("/screams", getAllScreams); //  get all scream
 app.post("/scream", fbAuth, postOneScream); //  add one scream
-app.get("/scream/:screamId", getScream);
+app.get("/scream/:screamId", getScream); // fetch one scream
+app.post("/scream/:screamId/comment", fbAuth, commentOnScream); // comment on the scream
+app.get("/scream/:screamId/like", fbAuth, likeScream); /// like scream
+app.get("/scream/:screamId/unlike", fbAuth, unlikeScream); /// like scream
 /// user
 
 app.post("/signup", signup); // ///  sign up
