@@ -47,12 +47,47 @@ exports.signup = async (req, res) => {
 };
 
 // add user details
-
 exports.addUserDetails = async (req, res) => {
   try {
     const userDetails = reduceUserDetails(req.body);
     await db.doc(`/users/${req.user.handle}`).update(userDetails);
     return res.status(201).json({ message: "details added successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+// get any user's details
+
+exports.getUserDetails = async (req, res) => {
+  try {
+    let userData = {};
+    const userDoc = await db.doc(`/users/${req.params.handle}`).get();
+
+    if (userDoc.exists) {
+      userData.user = userDoc.data();
+      userData.screams = [];
+      const userScream = await db
+        .collection("screams")
+        .where("userHandle", "==", req.params.handle)
+        .orderBy("createdAt", "desc")
+        .get();
+      userScream.forEach((doc) => {
+        userData.screams.push({
+          body: doc.data().body,
+          createdAt: doc.data().createdAt,
+          userHandle: doc.data().userHandle,
+          likeCount: doc.data().likeCount,
+          commentCount: doc.data().commentCount,
+          screamId: doc.id,
+        });
+      });
+    } else {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.status(201).json(userData);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message });
@@ -79,6 +114,24 @@ exports.getAuthenticatedUser = async (req, res) => {
       });
     }
 
+    const notRef = await db
+      .collection("notifications")
+      .where("recipient", "==", req.user.handle)
+      .orderBy("createdAt", "desc")
+      .get();
+
+    userData.notifications = [];
+    notRef.forEach((doc) => {
+      userData.notifications.push({
+        createdAt: doc.data().createdAt,
+        recipient: doc.data().recipient,
+        sender: doc.data().sender,
+        type: doc.data().type,
+        read: doc.data().read,
+        screamId: doc.data().screamId,
+        notificationId: doc.id,
+      });
+    });
     return res.json(userData);
   } catch (error) {
     console.error(error);
@@ -135,4 +188,23 @@ exports.uploadImage = (req, res) => {
       });
   });
   bb.end(req.rawBody);
+};
+
+/// mark notification read
+
+exports.markNotificationsRead = (req, res) => {
+  const butch = db.batch();
+  req.body.forEach((notificationId) => {
+    const notification = db.doc(`/notification/${notificationId}`);
+    butch.update(notification, { read: true });
+  });
+  butch
+    .commit()
+    .then(() => {
+      return res.json({ message: "notification marked read" });
+    })
+    .catch(() => {
+      console.error(error);
+      return res.status(500).json({ error: error.message });
+    });
 };

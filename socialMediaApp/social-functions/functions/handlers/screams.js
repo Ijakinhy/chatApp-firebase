@@ -66,8 +66,8 @@ exports.getScream = async (req, res) => {
       .get();
     commentsCol.forEach((doc) => {
       screamData.comments.push(doc.data());
-      return res.json({ screamData });
     });
+    return res.json({ screamData });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
@@ -92,7 +92,9 @@ exports.commentOnScream = async (req, res) => {
     if (!screamRef.exists) {
       return res.status(404).json({ error: "scream not found" });
     }
-
+    await screamRef.ref.update({
+      commentCount: screamRef.data().commentCount + 1,
+    });
     await db.collection("comments").add(newScream);
     return res.json(newScream);
   } catch (error) {
@@ -171,6 +173,42 @@ exports.unlikeScream = async (req, res) => {
     return res.json(screamData);
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+/// delete scream
+
+exports.deleteScream = async (req, res) => {
+  const document = await db.doc(`/screams/${req.params.screamId}`).get();
+  try {
+    if (!document.exists) {
+      return res.status(404).json({ error: "scream not found" });
+    }
+    if (req.user.handle !== document.data().userHandle) {
+      return res.status(403).json({ error: "unauthorized" });
+    } else {
+      await db.doc(`/screams/${req.params.screamId}`).delete();
+      const commentDocs = await db
+        .collection("comments")
+        .where("screamId", "==", req.params.screamId)
+        .get();
+      // remove also comment
+      commentDocs.forEach(async (doc) => {
+        await db.doc(`/comments/${doc.id}`).delete();
+      });
+      // remove also like
+      const likeDocs = await db
+        .collection("likes")
+        .where("screamId", "==", req.params.screamId)
+        .get();
+      likeDocs.forEach(async (doc) => {
+        await db.doc(`/likes/${doc.id}`).delete();
+      });
+    }
+    return res.json({ message: "Scream deleted successfully" });
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({ error: error.message });
   }
 };
