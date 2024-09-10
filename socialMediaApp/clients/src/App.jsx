@@ -13,7 +13,7 @@ function App() {
   const handleSignIn = async () => {
     const userCredentials = await signInWithEmailAndPassword(
       auth,
-      "user1@gmail.com",
+      "user@gmail.com",
       "123456"
     );
     const user = userCredentials.user;

@@ -30,7 +30,7 @@ exports.postOneScream = (req, res) => {
     createdAt: new Date().toISOString(),
     likeCount: 0,
     commentCount: 0,
-    userImage: req.user.imageUrl,
+    imageUrl: req.user.imageUrl,
   };
   db.collection("screams")
     .add(newScream)
@@ -78,7 +78,7 @@ exports.getScream = async (req, res) => {
 exports.commentOnScream = async (req, res) => {
   try {
     if (!req.body.body.trim()) {
-      return res.status(404).json({ error: "Must not be empty" });
+      return res.status(404).json({ comment: "Must not be empty" });
     }
     const newScream = {
       body: req.body.body,
