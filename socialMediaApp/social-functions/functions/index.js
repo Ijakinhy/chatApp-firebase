@@ -19,7 +19,12 @@ const {
   markNotificationsRead,
 } = require("./handlers/user");
 const fbAuth = require("./utils/fbAuth");
-const { db } = require("./utils/admin");
+const { db, admin } = require("./utils/admin");
+const {
+  onDocumentCreated,
+  onDocumentUpdated,
+  onDocumentDeleted,
+} = require("firebase-functions/firestore");
 
 const app = express();
 
@@ -61,10 +66,9 @@ app.post("/notifications", fbAuth, markNotificationsRead);
 exports.api = functions.https.onRequest(app);
 
 /// create notifications on like
-
-exports.createNotificationOnLike = functions.firestore
-  .document("/likes/{id}")
-  .onCreate(async (snapShot) => {
+exports.createNotificationOnLike = onDocumentCreated(
+  "/likes/{id}",
+  async (snapShot) => {
     try {
       const screamDoc = await db
         .doc(`/screams/${snapShot.data().screamId}`)
@@ -89,27 +93,33 @@ exports.createNotificationOnLike = functions.firestore
       console.error("error creating notification on like", error);
       return;
     }
-  });
+  }
+);
+// exports.createNotificationOnLike = functions.firestore
+//   .document("likes/{id}")
+//   .onCreate(async (snapShot) => {
+
+//   });
 
 /// delete notification when like and after unlike
 
-exports.deleteNotificationOnUnlike = functions.firestore
-  .document("/likes/{id}")
-  .onDelete(async (snapShot) => {
-    try {
-      db.doc(`/notifications/${snapShot.id}`).delete();
-      return;
-    } catch (error) {
-      console.error(error);
-      return;
-    }
-  });
+// exports.deleteNotificationOnUnlike = functions.firestore
+//   .document("likes/{id}")
+//   .onDelete(async (snapShot) => {
+//     try {
+//       db.doc(`/notifications/${snapShot.id}`).delete();
+//       return;
+//     } catch (error) {
+//       console.error(error);
+//       return;
+//     }
+//   });
 
 /// create notification on comment
 
-exports.createNotificationOnComment = functions.firestore
-  .document("/comments/{id}")
-  .onCreate(async (snapShot) => {
+exports.createNotificationOnComment = onDocumentCreated(
+  "/comments/{id}",
+  async (snapShot) => {
     try {
       const doc = await db.doc(`/screams/${snapShot.data().screamId}`).get();
       if (
@@ -129,13 +139,14 @@ exports.createNotificationOnComment = functions.firestore
       console.error(error);
       return;
     }
-  });
+  }
+);
 
-/// change profile image
+// /// change profile image
 
-exports.onUserImageChange = functions.firestore
-  .document("/users/{userId}")
-  .onUpdate(async (change) => {
+exports.onUserImageChange = onDocumentUpdated(
+  "/users/{userId}",
+  async (change) => {
     try {
       console.log(change.before.data());
       console.log(change.after.data());
@@ -157,40 +168,39 @@ exports.onUserImageChange = functions.firestore
     } catch (error) {
       console.error(error);
     }
-  });
+  }
+);
 
 /// on scream delete
-exports.onScreamDelete = functions.firestore
-  .document("/screams/{screamId}")
-  .onDelete(async (snapShot, context) => {
-    try {
-      const screamId = context.params.screamId;
-      const batch = db.batch();
-      // deleting related comment
-      const comments = await db
-        .collection("comments")
-        .where("screamId", "==", screamId)
-        .get();
-      comments.forEach((doc) => {
-        batch.delete(db.doc(`/comments/${doc.id}`));
-      });
-      // deleting related likes
-      const likes = await db
-        .collection("likes")
-        .where("screamId", "==", screamId)
-        .get();
-      likes.forEach((doc) => {
-        batch.delete(db.doc(`/likes/${doc.id}`));
-      });
-      const notifications = await db
-        .collection("notifications")
-        .where("screamId", "==", screamId)
-        .get();
-      notifications.forEach((doc) => {
-        batch.delete(db.doc(`/notifications/${doc.id}`));
-      });
-      return batch.commit();
-    } catch (error) {
-      console.error(error);
-    }
-  });
+exports.onScreamDelete = onDocumentDeleted(async (snapShot, context) => {
+  try {
+    const screamId = context.params.screamId;
+    const batch = db.batch();
+    // deleting related comment
+    const comments = await db
+      .collection("comments")
+      .where("screamId", "==", screamId)
+      .get();
+    comments.forEach((doc) => {
+      batch.delete(db.doc(`/comments/${doc.id}`));
+    });
+    // deleting related likes
+    const likes = await db
+      .collection("likes")
+      .where("screamId", "==", screamId)
+      .get();
+    likes.forEach((doc) => {
+      batch.delete(db.doc(`/likes/${doc.id}`));
+    });
+    const notifications = await db
+      .collection("notifications")
+      .where("screamId", "==", screamId)
+      .get();
+    notifications.forEach((doc) => {
+      batch.delete(db.doc(`/notifications/${doc.id}`));
+    });
+    return batch.commit();
+  } catch (error) {
+    console.error(error);
+  }
+});
